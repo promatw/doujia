@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>豆莢浪歌 · 風格探索 Mockup</title>
+<style>
+:root{
+  --paper:#F4F1EA; --paper2:#EAE5DA; --ink:#18171B; --ink2:#2A2830;
+  --hot:#FF5A1F; --hot-soft:#FFB08F; --bean:#5DBB3F; --bean-dk:#3E8F2A; --blush:#FF8FA8;
+  --font:"Noto Sans CJK TC","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:#DCD6CA;color:var(--ink);width:1400px;}
+.page{padding:56px 70px 64px;position:relative;overflow:hidden}
+/* ---------- page header ---------- */
+.head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px}
+.brand{display:flex;align-items:center;gap:20px}
+.brand svg{width:150px;height:72px}
+.wordmark{font-weight:900;font-size:56px;letter-spacing:2px;line-height:1}
+.wordmark b{color:var(--hot)}
+.slogan{font-weight:700;font-size:18px;margin-top:8px;letter-spacing:3px;color:var(--ink2)}
+.meta{text-align:right}
+.meta .tag{display:inline-block;font-weight:900;font-size:13px;letter-spacing:2px;background:var(--ink);color:var(--paper);padding:6px 12px;border-radius:99px}
+.swatches{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.sw{width:34px;height:34px;border-radius:50%;border:3px solid var(--ink)}
+.icons{display:flex;gap:26px;justify-content:flex-end;margin-top:14px}
+.icons figure{text-align:center;font-size:12px;font-weight:700;color:var(--ink2)}
+.icons svg{width:46px;height:46px;display:block;margin:0 auto 4px}
+/* ---------- phones ---------- */
+.row{display:flex;gap:45px;justify-content:center}
+.phone{width:390px;height:844px;border-radius:54px;background:var(--paper);position:relative;overflow:hidden;
+  box-shadow:0 0 0 10px var(--ink),0 0 0 12px #444,14px 18px 0 12px rgba(24,23,27,.18)}
+.phone.dark{background:var(--ink);color:var(--paper)}
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#000;z-index:5}
+.status{height:54px;display:flex;justify-content:space-between;align-items:center;padding:6px 32px 0 36px;font-weight:700;font-size:15px}
+.status i{display:inline-block;width:24px;height:11px;border:2px solid currentColor;border-radius:4px;position:relative;vertical-align:middle}
+.status i:after{content:"";position:absolute;inset:1px 5px 1px 1px;background:currentColor;border-radius:1px}
+.label{position:absolute;top:-40px;left:4px;font-weight:900;font-size:15px;letter-spacing:1px}
+.wrap{position:relative;margin-top:40px}
+/* common */
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;height:72px;border-radius:24px;font-weight:900;font-size:26px;letter-spacing:4px;
+  border:3.5px solid var(--ink);box-shadow:0 6px 0 var(--ink)}
+.btn.hot{background:var(--hot);color:#fff}
+.btn.bean{background:var(--bean);color:var(--ink)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:99px;font-size:14px;font-weight:700}
+/* tab bar */
+.tabbar{position:absolute;left:16px;right:16px;bottom:26px;height:78px;border-radius:30px;display:flex;justify-content:space-around;align-items:center;
+  background:var(--paper);border:3px solid var(--ink);box-shadow:0 5px 0 var(--ink)}
+.dark .tabbar{background:var(--ink2);border-color:#000;box-shadow:0 5px 0 #000}
+.tab{width:64px;height:64px;display:flex;align-items:center;justify-content:center;position:relative;color:var(--ink)}
+.dark .tab{color:#CFC9BD}
+.tab svg{width:46px;height:46px}
+.tab.on{color:var(--hot)}
+.tab.on:after{content:"";position:absolute;bottom:-3px;width:7px;height:7px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px 2px rgba(255,90,31,.45)}
+.homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:currentColor;opacity:.8}
+/* progress beans */
+.prog{margin:6px auto 0;width:300px}
+.prog svg{width:300px;height:62px;display:block}
+.prog .lbl{position:relative;height:18px;font-size:13px;font-weight:700;opacity:.75;margin-top:-2px}
+.prog .lbl span{position:absolute;transform:translateX(-50%);white-space:nowrap}.prog .lbl span:nth-child(1){left:66px}.prog .lbl span:nth-child(2){left:122px}.prog .lbl span:nth-child(3){left:178px}.prog .lbl span:nth-child(4){left:234px}
+.prog .lbl span.on{color:var(--hot);opacity:1}
+/* screen A */
+.a-logo{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:10px}
+.a-logo svg{width:70px;height:34px}
+.a-logo span{font-weight:900;font-size:26px;letter-spacing:2px}
+.hero{display:block;margin:2px auto 0;width:330px;height:380px}
+.a-slogan{text-align:center;font-weight:900;font-size:21px;letter-spacing:2px;line-height:1.5;margin-top:-6px}
+.a-slogan em{font-style:normal;color:var(--hot)}
+.field{margin:26px 28px 0;height:66px;border-radius:22px;border:3.5px solid var(--ink);background:#fff;display:flex;align-items:center;padding:0 20px;gap:12px;font-size:22px;font-weight:700;color:#A8A196}
+.field .cur{width:3px;height:28px;background:var(--hot);margin-left:-8px}
+.a-btn{margin:18px 28px 0}
+/* screen B */
+.b-hi{text-align:center;font-weight:900;font-size:30px;margin-top:28px;letter-spacing:2px}
+.b-hi small{display:block;font-size:15px;font-weight:700;opacity:.55;letter-spacing:3px;margin-top:2px}
+.rec{position:relative;width:330px;height:330px;margin:10px auto 0}
+.rec svg{position:absolute;inset:0;width:100%;height:100%}
+.b-timer{text-align:center;font-weight:900;font-size:22px;letter-spacing:3px;margin-top:-8px}
+.b-timer span{opacity:.4}
+.b-hint{display:flex;justify-content:center;margin-top:18px}
+.b-hint .pill{background:#2E2C33;color:#E9E3D7;border:2px solid #45424C}
+/* screen C */
+.c-top{display:flex;justify-content:center;margin-top:8px}
+.c-top .pill{background:var(--ink);color:var(--paper)}
+.dots3 b{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--hot);margin:0 1.5px}
+.dots3 b:nth-child(2){opacity:.6}.dots3 b:nth-child(3){opacity:.3}
+.c-title{display:flex;justify-content:space-between;align-items:flex-end;margin:18px 30px 0}
+.c-title h2{font-size:32px;font-weight:900;letter-spacing:2px}
+.c-title span{font-weight:900;font-size:16px;background:var(--bean);border:2.5px solid var(--ink);padding:3px 12px;border-radius:99px}
+.card{margin:14px 22px 0;height:236px;border-radius:30px;background:#fff;border:3.5px solid var(--ink);position:relative;overflow:hidden}
+.card svg{width:100%;height:100%}
+.c-ctrl{display:flex;align-items:center;justify-content:center;gap:26px;margin-top:22px}
+.ghost{width:60px;height:60px;border-radius:50%;border:3px solid var(--ink);display:flex;align-items:center;justify-content:center;background:var(--paper)}
+.play{width:104px;height:104px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 0 var(--hot)}
+.c-btn{margin:24px 28px 0}
+/* deco */
+.bgspray{position:absolute;pointer-events:none}
+.note{margin-top:46px;display:flex;gap:30px;justify-content:center;font-size:14px;font-weight:700;color:var(--ink2)}
+.note span b{color:var(--hot)}
+</style>
+</head>
+<body>
+<!-- ============ shared SVG defs ============ -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- grainy airbrush filter -->
+    <filter id="spray" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="b"/>
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="1" seed="3" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  4 0 0 0 -1.6" result="m"/>
+      <feComposite in="b" in2="m" operator="in" result="g"/>
+      <feGaussianBlur in="b" stdDeviation="2" result="b2"/>
+      <feComponentTransfer in="b2" result="b3"><feFuncA type="linear" slope=".45"/></feComponentTransfer>
+      <feMerge><feMergeNode in="b3"/><feMergeNode in="g"/></feMerge>
+    </filter>
+    <filter id="spraySm" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="b"/>
+      <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="8" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  4 0 0 0 -1.5" result="m"/>
+      <feComposite in="b" in2="m" operator="in" result="g"/>
+      <feComponentTransfer in="b" result="b3"><feFuncA type="linear" slope=".5"/></feComponentTransfer>
+      <feMerge><feMergeNode in="b3"/><feMergeNode in="g"/></feMerge>
+    </filter>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".7"/></filter>
+
+    <!-- pod shell (48x48) -->
+    <symbol id="pod" viewBox="0 0 48 48">
+      <path d="M24 7.5c8.6 0 14 5.6 14 13.4v7.6c0 8.4-6.4 14.3-14 14.3S10 36.9 10 28.5v-7.6C10 13.1 15.4 7.5 24 7.5z" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linejoin="round"/>
+      <path d="M24 7.5c0-3 1.6-5 4.8-5.3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <!-- singing head (profile, open mouth) -->
+    <symbol id="head" viewBox="0 0 48 48">
+      <path d="M13 44v-8C8 33 6 28 6 22 6 12.5 13.5 6 22.5 6 30.5 6 36 11 37 18l3.8 6.2c.6 1-.1 1.8-1 1.8H37.4v1.6l-5.6 2.2 5.6 1.7v3.1c0 2.5-1.9 4.2-4.4 4.1L28 38.2V44z" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-sing" viewBox="0 0 48 48">
+      <path d="M24 7.5c8.6 0 14 5.6 14 13.4v7.6c0 8.4-6.4 14.3-14 14.3S10 36.9 10 28.5v-7.6C10 13.1 15.4 7.5 24 7.5z" fill="currentColor" opacity=".16"/>
+      <use href="#head" x="1" y="3" width="38" height="38"/>
+      <circle cx="40.5" cy="17" r="2" fill="currentColor"/>
+      <circle cx="44" cy="25.5" r="2.6" fill="currentColor"/>
+      <circle cx="40.5" cy="34" r="1.7" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-melody" viewBox="0 0 48 48">
+      <use href="#pod" width="48" height="48"/>
+      <path d="M21 33V18.5l9-2.5v4l-9 2.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/>
+      <ellipse cx="18.6" cy="33" rx="3.6" ry="3" fill="currentColor"/>
+      <path d="M30 17v12" stroke="currentColor" stroke-width="2.8"/>
+      <ellipse cx="27.6" cy="29.4" rx="3.4" ry="2.8" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-voice" viewBox="0 0 48 48">
+      <use href="#pod" width="48" height="48"/>
+      <path d="M16.5 29v-3a7.5 7.5 0 0 1 15 0v3" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
+      <rect x="14.5" y="27.5" width="5" height="8" rx="2.3" fill="currentColor"/>
+      <rect x="28.5" y="27.5" width="5" height="8" rx="2.3" fill="currentColor"/>
+      <path d="M21.5 22.5v4M24 20.5v8M26.5 22.5v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-share" viewBox="0 0 48 48">
+      <use href="#pod" width="48" height="48"/>
+      <path d="M24 36V24" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <path d="M24 26c-1-4.5-4.6-6.8-8.6-6.3.2 4.6 3.6 7 8.6 6.3z" fill="currentColor"/>
+      <path d="M24 23.5c.6-5 4.4-7.8 9-7.4-.2 5-4 7.9-9 7.4z" fill="currentColor"/>
+      <path d="M19 36.5h10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+    </symbol>
+    <!-- logo pod with 4 beans -->
+    <symbol id="logo" viewBox="0 0 150 72">
+      <ellipse cx="78" cy="38" rx="62" ry="26" fill="#FF5A1F" opacity=".9" filter="url(#spray)"/>
+      <path d="M14 40C26 16 108 10 140 24 130 50 46 60 14 40z" fill="#F4F1EA" stroke="#18171B" stroke-width="4.5" stroke-linejoin="round"/>
+      <circle cx="42" cy="36" r="9" fill="#5DBB3F" stroke="#18171B" stroke-width="3"/>
+      <circle cx="64" cy="33.5" r="9.5" fill="#5DBB3F" stroke="#18171B" stroke-width="3"/>
+      <circle cx="87" cy="32" r="9.5" fill="#5DBB3F" stroke="#18171B" stroke-width="3"/>
+      <circle cx="110" cy="31" r="9" fill="#FF5A1F" stroke="#18171B" stroke-width="3"/>
+      <circle cx="61" cy="30.5" r="2.2" fill="#fff" opacity=".8"/><circle cx="84" cy="29" r="2.2" fill="#fff" opacity=".8"/>
+      <circle cx="39" cy="33" r="2" fill="#fff" opacity=".8"/><circle cx="107" cy="28" r="2" fill="#fff" opacity=".8"/>
+      <path d="M14 40c-4-1-7-4-7-8 0-3 2-5 5-5" fill="none" stroke="#18171B" stroke-width="4" stroke-linecap="round"/>
+      <path d="M140 24c3-1 5-3.5 5-6.5" fill="none" stroke="#18171B" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="page">
+  <div class="head">
+    <div>
+      <div class="brand">
+        <svg viewBox="0 0 150 72"><use href="#logo"/></svg>
+        <div>
+          <div class="wordmark">豆莢<b>浪</b>歌</div>
+          <div class="slogan">隨口唱一首，短短幾秒天下行</div>
+        </div>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="tag">STYLE EXPLORATION · 街頭噴漆・極簡</span>
+      <div class="swatches">
+        <div class="sw" style="background:#F4F1EA"></div><div class="sw" style="background:#18171B"></div>
+        <div class="sw" style="background:#FF5A1F"></div><div class="sw" style="background:#5DBB3F"></div><div class="sw" style="background:#FF8FA8;width:24px;height:24px;margin-top:5px"></div>
+      </div>
+      <div class="icons">
+        <figure><svg style="color:#FF5A1F"><use href="#i-sing"/></svg>唱</figure>
+        <figure><svg><use href="#i-melody"/></svg>旋律</figure>
+        <figure><svg><use href="#i-voice"/></svg>配樂/換聲</figure>
+        <figure><svg><use href="#i-share"/></svg>分享/聽</figure>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+  <!-- ================= A: first run ================= -->
+  <div class="wrap"><div class="label">A ・ 首次啟動</div>
+  <div class="phone" id="p1">
+    <div class="island"></div>
+    <div class="status"><span>9:41</span><i></i></div>
+    <div class="a-logo"><svg viewBox="0 0 150 72"><use href="#logo"/></svg><span>豆莢浪歌</span></div>
+    <svg class="hero" viewBox="0 0 330 380">
+      <!-- airbrush halo -->
+      <circle cx="160" cy="190" r="120" fill="#FF5A1F" opacity=".55" filter="url(#spray)"/>
+      <circle cx="250" cy="300" r="40" fill="#5DBB3F" opacity=".55" filter="url(#spray)"/>
+      <!-- floating notes -->
+      <g fill="#18171B" transform="translate(262 70) rotate(14)"><path d="M0 26V2l14-4v6L3 7" stroke="#18171B" stroke-width="4" fill="none" stroke-linejoin="round"/><ellipse cx="-4" cy="26" rx="6" ry="5"/></g>
+      <g fill="#5DBB3F" stroke="#18171B" stroke-width="2.5" transform="translate(42 92) rotate(-16)"><ellipse cx="0" cy="18" rx="7" ry="5.5"/><path d="M6 18V-4" fill="none" stroke-width="4"/></g>
+      <!-- pod body -->
+      <g transform="translate(60 50) rotate(-6 100 150)">
+        <path d="M100 20C140 20 168 45 168 78c0 22-8 30-8 37s10 18 10 35c0 20-10 30-10 38s6 17 4 34c-4 28-32 46-64 46S40 250 36 222c-2-17 4-26 4-34s-10-18-10-38c0-17 10-28 10-35s-8-15-8-37C32 45 60 20 100 20z"
+          fill="#5DBB3F" stroke="#18171B" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M150 70c8 20 6 40 0 50M156 160c6 16 4 34-2 44" fill="none" stroke="#9BE07F" stroke-width="7" stroke-linecap="round"/>
+        <path d="M100 20c0-10 6-17 18-18" fill="none" stroke="#18171B" stroke-width="6" stroke-linecap="round"/>
+        <path d="M112 6c10-8 26-6 30 2-10 8-24 6-30-2z" fill="#9BE07F" stroke="#18171B" stroke-width="4" stroke-linejoin="round"/>
+        <!-- face -->
+        <ellipse cx="74" cy="112" rx="8" ry="10" fill="#18171B"/><ellipse cx="124" cy="112" rx="8" ry="10" fill="#18171B"/>
+        <circle cx="77" cy="108" r="3" fill="#fff"/><circle cx="127" cy="108" r="3" fill="#fff"/>
+        <ellipse cx="56" cy="138" rx="13" ry="8" fill="#FF8FA8" opacity=".85"/><ellipse cx="142" cy="138" rx="13" ry="8" fill="#FF8FA8" opacity=".85"/>
+        <path d="M82 140c0-4 8-6 17-6s17 2 17 6c0 16-7 30-17 30s-17-14-17-30z" fill="#18171B"/>
+        <path d="M88 160c4-6 18-6 22 0-3 7-8 10-11 10s-8-3-11-10z" fill="#FF5A1F"/>
+        <!-- arms -->
+        <path d="M36 180c-18 0-26-12-24-26" fill="none" stroke="#18171B" stroke-width="6" stroke-linecap="round"/>
+        <path d="M164 176c16 4 28-6 30-20" fill="none" stroke="#18171B" stroke-width="6" stroke-linecap="round"/>
+        <!-- bean bellies -->
+        <circle cx="100" cy="214" r="4" fill="#3E8F2A"/><circle cx="100" cy="236" r="4" fill="#3E8F2A"/>
+      </g>
+      <!-- 3 spray dots -->
+      <g fill="#FF5A1F" filter="url(#soft)">
+        <circle cx="262" cy="166" r="8"/><circle cx="282" cy="200" r="11"/><circle cx="262" cy="236" r="7"/>
+      </g>
+      <g fill="#18171B" opacity=".55"><circle cx="40" cy="250" r="2"/><circle cx="52" cy="262" r="1.3"/><circle cx="30" cy="232" r="1.5"/><circle cx="294" cy="120" r="1.6"/><circle cx="300" cy="134" r="1"/><circle cx="70" cy="330" r="1.4"/></g>
+    </svg>
+    <div class="a-slogan">隨口唱一首<br><em>短短幾秒</em>天下行</div>
+    <div class="field"><span class="cur"></span>取個名字</div>
+    <div class="btn hot a-btn"><svg width="34" height="34" style="color:#fff"><use href="#head"/></svg>開始唱</div>
+    <div class="homebar"></div>
+  </div></div>
+
+  <!-- ================= B: sing home ================= -->
+  <div class="wrap"><div class="label">B ・ 唱｜首頁</div>
+  <div class="phone dark" id="p2">
+    <div class="island"></div>
+    <div class="status"><span>9:41</span><i></i></div>
+    <div class="prog">
+      <svg viewBox="0 0 300 62">
+        <path d="M14 34C40 8 250 6 288 26 270 54 50 60 14 34z" fill="none" stroke="#F4F1EA" stroke-width="3.5" stroke-linejoin="round"/>
+        <circle cx="66" cy="32" r="22" fill="#FF5A1F" opacity=".9" filter="url(#spraySm)"/>
+        <circle cx="66" cy="32" r="12" fill="#FF5A1F" stroke="#F4F1EA" stroke-width="3"/>
+        <circle cx="122" cy="29" r="11" fill="none" stroke="#6A6672" stroke-width="3" stroke-dasharray="4 4"/>
+        <circle cx="178" cy="27.5" r="11" fill="none" stroke="#6A6672" stroke-width="3" stroke-dasharray="4 4"/>
+        <circle cx="234" cy="27" r="11" fill="none" stroke="#6A6672" stroke-width="3" stroke-dasharray="4 4"/>
+      </svg>
+      <div class="lbl"><span class="on">唱</span><span>旋律</span><span>配樂</span><span>分享</span></div>
+    </div>
+    <div class="b-hi">嗨，小莢！<small>點一下，開始唱</small></div>
+    <div class="rec">
+      <svg viewBox="0 0 330 330">
+        <circle cx="165" cy="165" r="140" fill="#FF5A1F" opacity=".75" filter="url(#spray)"/>
+        <circle cx="165" cy="165" r="128" fill="none" stroke="#F4F1EA" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round" opacity=".6"/>
+        <circle cx="165" cy="172" r="108" fill="#000" opacity=".35"/>
+        <circle cx="165" cy="165" r="108" fill="#FF5A1F" stroke="#F4F1EA" stroke-width="5"/>
+        <use href="#head" x="96" y="96" width="128" height="128" style="color:#F4F1EA"/>
+        <g fill="#F4F1EA"><circle cx="236" cy="138" r="7"/><circle cx="250" cy="170" r="9"/><circle cx="236" cy="203" r="6"/></g>
+        <g fill="#F4F1EA" opacity=".5"><circle cx="40" cy="70" r="2"/><circle cx="30" cy="86" r="1.2"/><circle cx="296" cy="260" r="2"/><circle cx="286" cy="276" r="1.3"/><circle cx="60" cy="290" r="1.5"/></g>
+      </svg>
+    </div>
+    <div class="b-timer">0:00 <span>/ 0:15</span></div>
+    <div class="b-hint"><span class="pill">🤫 安靜的地方・手機離嘴約20公分</span></div>
+    <div class="tabbar">
+      <div class="tab on"><svg><use href="#i-sing"/></svg></div>
+      <div class="tab"><svg><use href="#i-melody"/></svg></div>
+      <div class="tab"><svg><use href="#i-voice"/></svg></div>
+      <div class="tab"><svg><use href="#i-share"/></svg></div>
+    </div>
+    <div class="homebar"></div>
+  </div></div>
+
+  <!-- ================= C: melody result ================= -->
+  <div class="wrap"><div class="label">C ・ 旋律結果</div>
+  <div class="phone" id="p3">
+    <div class="island"></div>
+    <div class="status"><span>9:41</span><i></i></div>
+    <div class="prog">
+      <svg viewBox="0 0 300 62">
+        <path d="M14 34C40 8 250 6 288 26 270 54 50 60 14 34z" fill="none" stroke="#18171B" stroke-width="3.5" stroke-linejoin="round"/>
+        <circle cx="66" cy="32" r="12" fill="#5DBB3F" stroke="#18171B" stroke-width="3"/>
+        <path d="M60 32l4.5 4.5 8-9" fill="none" stroke="#18171B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="122" cy="29" r="22" fill="#FF5A1F" opacity=".9" filter="url(#spraySm)"/>
+        <circle cx="122" cy="29" r="12" fill="#FF5A1F" stroke="#18171B" stroke-width="3"/>
+        <circle cx="178" cy="27.5" r="11" fill="none" stroke="#B3AC9F" stroke-width="3" stroke-dasharray="4 4"/>
+        <circle cx="234" cy="27" r="11" fill="none" stroke="#B3AC9F" stroke-width="3" stroke-dasharray="4 4"/>
+      </svg>
+      <div class="lbl"><span>唱 ✓</span><span class="on">旋律</span><span>配樂</span><span>分享</span></div>
+    </div>
+    <div class="c-top"><span class="pill"><span class="dots3"><b></b><b></b><b></b></span>換聲處理中 · 好了通知你</span></div>
+    <div class="c-title"><h2>你的旋律</h2><span>12 秒</span></div>
+    <div class="card">
+      <svg viewBox="0 0 340 244" id="notes"></svg>
+    </div>
+    <div class="c-ctrl">
+      <div class="ghost"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7" fill="none" stroke="#18171B" stroke-width="2.8" stroke-linecap="round"/><path d="M5 2.5v4.5h4.5" fill="none" stroke="#18171B" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="play"><svg width="44" height="44" viewBox="0 0 44 44"><path d="M13 7.5c0-2 2.2-3.2 3.9-2.1l20.5 14.2c1.4 1 1.4 3 0 4L16.9 37.8c-1.7 1.1-3.9-.1-3.9-2.1z" fill="#FF5A1F"/></svg></div>
+      <div class="ghost"><svg width="30" height="30" viewBox="0 0 48 48" style="color:#18171B"><use href="#head"/></svg></div>
+    </div>
+    <div class="btn bean c-btn">下一顆豆 <svg width="26" height="26" viewBox="0 0 24 24"><path d="M4 12h15M13 5l7 7-7 7" fill="none" stroke="#18171B" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="tabbar">
+      <div class="tab"><svg><use href="#i-sing"/></svg></div>
+      <div class="tab on"><svg><use href="#i-melody"/></svg></div>
+      <div class="tab"><svg><use href="#i-voice"/></svg></div>
+      <div class="tab"><svg><use href="#i-share"/></svg></div>
+    </div>
+    <div class="homebar"></div>
+  </div></div>
+  </div>
+
+  <div class="note">
+    <span><b>●</b> 每個圖示 = 豆莢外殼 + 內部符號</span>
+    <span><b>●</b> 「唱」= 開口人頭剪影 + 三顆噴點（取代豆莢，留淡淡莢形噴霧底）</span>
+    <span><b>●</b> 底部 Tab 無文字・大觸控區</span>
+  </div>
+</div>
+
+<script>
+// melody note dots (deterministic)
+(function(){
+  const s=document.getElementById('notes'), NS='http://www.w3.org/2000/svg';
+  const pitch=[5,5,6,8,8,7,5,4,4,5,7,9,10,9,7,6,5,3,4,5];
+  const dur  =[1,1,2,1,1,1,2,1,1,1,1,1,2,1,1,1,2,1,1,3];
+  let x=22, pts=[]; const step=10;
+  // grid lines
+  for(let i=0;i<6;i++){const l=document.createElementNS(NS,'line');l.setAttribute('x1',16);l.setAttribute('x2',324);
+    const y=40+i*34;l.setAttribute('y1',y);l.setAttribute('y2',y);l.setAttribute('stroke','#EDE8DE');l.setAttribute('stroke-width',2);s.appendChild(l);}
+  pitch.forEach((p,i)=>{const w=dur[i]*step; pts.push([x+w/2,212-p*16,w]); x+=w+1.5;});
+  const path=document.createElementNS(NS,'path');
+  path.setAttribute('d','M'+pts.map(p=>p[0]+' '+p[1]).join(' L'));
+  path.setAttribute('fill','none');path.setAttribute('stroke','#18171B');path.setAttribute('stroke-width',2);path.setAttribute('stroke-dasharray','2 5');path.setAttribute('stroke-linecap','round');path.setAttribute('opacity','.35');
+  s.appendChild(path);
+  const ph=9; // playhead index
+  // halo behind playing note
+  const h=document.createElementNS(NS,'circle');h.setAttribute('cx',pts[ph][0]);h.setAttribute('cy',pts[ph][1]);h.setAttribute('r',26);h.setAttribute('fill','#FF5A1F');h.setAttribute('opacity','.8');h.setAttribute('filter','url(#spraySm)');s.appendChild(h);
+  pts.forEach((p,i)=>{
+    const r=6+Math.min(p[2],30)/5;
+    const c=document.createElementNS(NS,'rect');
+    const w=Math.max(r*2,p[2]-2);
+    c.setAttribute('x',p[0]-w/2);c.setAttribute('y',p[1]-r);c.setAttribute('width',w);c.setAttribute('height',r*2);c.setAttribute('rx',r);
+    c.setAttribute('fill', i<ph?'#5DBB3F':(i===ph?'#FF5A1F':'#F4F1EA'));
+    c.setAttribute('stroke','#18171B');c.setAttribute('stroke-width',2.5);
+    s.appendChild(c);
+  });
+  const L=document.createElementNS(NS,'line');L.setAttribute('x1',pts[ph][0]);L.setAttribute('x2',pts[ph][0]);L.setAttribute('y1',16);L.setAttribute('y2',228);
+  L.setAttribute('stroke','#FF5A1F');L.setAttribute('stroke-width',3);L.setAttribute('stroke-linecap','round');s.insertBefore(L,h);
+  const t=document.createElementNS(NS,'text');t.setAttribute('x',20);t.setAttribute('y',232);t.setAttribute('font-size',13);t.setAttribute('font-weight',700);t.setAttribute('fill','#A8A196');t.textContent='0:05';s.appendChild(t);
+  const t2=t.cloneNode();t2.setAttribute('x',290);t2.textContent='0:12';s.appendChild(t2);
+})();
+</script>
+</body>
+</html>

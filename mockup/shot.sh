@@ -1,0 +1,1 @@
+google-chrome --headless=new --no-sandbox --disable-gpu --hide-scrollbars --force-device-scale-factor=1 --window-size=1400,1600 --virtual-time-budget=2000 --screenshot=/workspace/doujia/mockup/preview.png file:///workspace/doujia/mockup/index.html 2>/dev/null

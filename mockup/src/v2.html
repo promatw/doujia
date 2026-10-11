@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><style>
+:root{--paper:#EDEAE2;--ink:#0F0F10;--mute:#77736C;--cob:#2142FF;--line:rgba(15,15,16,.85);
+--sans:"Noto Sans CJK TC",sans-serif;--disp:"Archivo Black","Noto Sans CJK TC",sans-serif;--mono:"Space Mono","Noto Sans Mono CJK TC",monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1400px;background:#D8D4CA;color:var(--ink);font-family:var(--sans)}
+.page{padding:50px 70px 60px;position:relative;overflow:hidden}
+.pgrain{position:absolute;inset:0;width:100%;height:100%;opacity:.22;mix-blend-mode:multiply;pointer-events:none}
+.head{display:grid;grid-template-columns:auto 1fr auto;gap:40px;align-items:end;margin-bottom:58px;position:relative;border-bottom:2px solid var(--ink);padding-bottom:22px}
+.big{font-weight:700;font-size:64px;letter-spacing:-1px;line-height:.95}
+.kick{font-family:var(--mono);font-size:12px;letter-spacing:2px;margin-bottom:12px}
+.kick b{background:var(--cob);color:#fff;padding:2px 8px;font-weight:700}
+.sl{font-size:15px;letter-spacing:4px;font-weight:700}
+.iconset{display:flex;gap:22px}
+.iconset figure{font-family:var(--mono);font-size:10px;text-align:center}
+.iconset svg{width:36px;height:36px;display:block;margin:0 auto 6px;stroke-width:1.6}
+.pal{display:flex;gap:0;margin-bottom:14px;justify-content:flex-end}.pal i{width:40px;height:22px;border:1.5px solid var(--ink);margin-left:-1.5px}
+.row{display:flex;gap:45px;justify-content:center;position:relative}
+.wrap{position:relative}
+.cap{position:absolute;top:-30px;left:0;right:0;display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:1px}
+.phone{width:390px;height:844px;border-radius:50px;background:var(--paper);position:relative;overflow:hidden;
+ box-shadow:0 0 0 8px var(--ink),0 30px 60px rgba(0,0,0,.18)}
+.grain{position:absolute;inset:0;width:100%;height:100%;opacity:.28;mix-blend-mode:multiply;pointer-events:none;z-index:9}
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;border-radius:20px;background:#000;z-index:10}
+.status{height:54px;display:flex;justify-content:space-between;align-items:center;padding:6px 32px 0 38px;font-weight:700;font-size:15px;font-family:"Inter",sans-serif}
+.status i{display:inline-block;width:24px;height:11px;border:1.5px solid currentColor;border-radius:4px;position:relative}
+.status i:after{content:"";position:absolute;inset:1.5px 6px 1.5px 1.5px;background:currentColor;border-radius:1px}
+.homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:var(--ink);z-index:11}
+.mast{display:flex;justify-content:space-between;align-items:center;margin:10px 24px 0;padding-bottom:8px;border-bottom:1.5px solid var(--ink);font-family:var(--mono);font-size:10.5px;letter-spacing:1px}
+.mono{font-family:var(--mono)}
+.btn{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:19px;font-weight:700;letter-spacing:6px;border-radius:3px}
+.btn.ink{background:var(--ink);color:var(--paper)}
+.btn.cob{background:var(--cob);color:#fff}
+.btn .ar{font-family:var(--mono);letter-spacing:0;font-weight:400;font-size:20px}
+.prog{position:relative;width:300px;margin:0 auto}
+.prog svg{width:300px;height:56px;display:block}
+.prog .lbl{position:relative;height:16px}
+.prog .lbl span{position:absolute;transform:translateX(-50%);font-size:11px;font-weight:700;letter-spacing:1px;white-space:nowrap;color:var(--mute)}
+.prog .lbl span.on{color:var(--cob)}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:96px;border-top:1.5px solid var(--ink);background:var(--paper);display:flex;justify-content:space-around;padding:12px 18px 0;z-index:8}
+.tab{width:64px;height:52px;display:flex;align-items:center;justify-content:center;position:relative;color:var(--ink)}
+.tab svg{width:32px;height:32px;stroke-width:1.6}
+.tab.on{color:var(--cob)}
+.tab.on:after{content:"";position:absolute;top:-13px;width:28px;height:4px;background:var(--cob)}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 12px;border-radius:99px;background:var(--ink);color:var(--paper);font-size:13px;font-weight:700;letter-spacing:1px}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--cob);box-shadow:0 0 0 3px rgba(33,66,255,.35)}
+.reg{position:absolute;width:14px;height:14px}
+.foot{margin-top:56px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:1px;border-top:2px solid var(--ink);padding-top:14px;position:relative}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+ <filter id="grainF" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+ <filter id="sprayL" x="-60%" y="-60%" width="220%" height="220%">
+  <feGaussianBlur in="SourceGraphic" stdDeviation="22" result="b"/>
+  <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="4" result="n"/>
+  <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3.6 0 0 0 -1.3" result="m"/>
+  <feComposite in="b" in2="m" operator="in" result="g"/>
+  <feComponentTransfer in="b" result="b3"><feFuncA type="linear" slope=".55"/></feComponentTransfer>
+  <feMerge><feMergeNode in="b3"/><feMergeNode in="g"/></feMerge></filter>
+ <filter id="sprayM" x="-60%" y="-60%" width="220%" height="220%">
+  <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/>
+  <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="1" seed="9" result="n"/>
+  <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3.8 0 0 0 -1.4" result="m"/>
+  <feComposite in="b" in2="m" operator="in" result="g"/>
+  <feComponentTransfer in="b" result="b3"><feFuncA type="linear" slope=".4"/></feComponentTransfer>
+  <feMerge><feMergeNode in="b3"/><feMergeNode in="g"/></feMerge></filter>
+ <filter id="sprayS" x="-80%" y="-80%" width="260%" height="260%">
+  <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b"/>
+  <feTurbulence type="fractalNoise" baseFrequency="1.8" numOctaves="1" seed="2" result="n"/>
+  <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3.8 0 0 0 -1.3" result="m"/>
+  <feComposite in="b" in2="m" operator="in" result="g"/>
+  <feComponentTransfer in="b" result="b3"><feFuncA type="linear" slope=".5"/></feComponentTransfer>
+  <feMerge><feMergeNode in="b3"/><feMergeNode in="g"/></feMerge></filter>
+ <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".6"/></filter>
+
+ <symbol id="pod" viewBox="0 0 32 32" overflow="visible">
+  <path vector-effect="non-scaling-stroke" d="M16 4.5c5.8 0 9 3.9 9 9.2v5.4c0 5.7-4 9.6-9 9.6s-9-3.9-9-9.6v-5.4c0-5.3 3.2-9.2 9-9.2z" fill="none" stroke="currentColor" stroke-linejoin="round"/>
+  <path vector-effect="non-scaling-stroke" d="M16 4.5c0-1.9 1.1-3.1 3.2-3.3" fill="none" stroke="currentColor" stroke-linecap="round"/>
+ </symbol>
+ <symbol id="headO" viewBox="0 0 48 48" overflow="visible">
+  <path vector-effect="non-scaling-stroke" d="M13 44v-8C8 33 6 28 6 22 6 12.5 13.5 6 22.5 6 30.5 6 36 11 37 18l3.8 6.2c.6 1-.1 1.8-1 1.8H37.4v1.6l-5.6 2.2 5.6 1.7v3.1c0 2.5-1.9 4.2-4.4 4.1L28 38.2V44" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"/>
+ </symbol>
+ <symbol id="i-sing" viewBox="0 0 32 32" overflow="visible">
+  <use href="#headO" x="1" y="3" width="25" height="25"/>
+  <circle cx="26.6" cy="11" r="1.25" fill="currentColor"/><circle cx="29.2" cy="16.6" r="1.6" fill="currentColor"/><circle cx="26.6" cy="22.2" r="1.05" fill="currentColor"/>
+ </symbol>
+ <symbol id="i-melody" viewBox="0 0 32 32" overflow="visible">
+  <use href="#pod" width="32" height="32"/>
+  <path vector-effect="non-scaling-stroke" d="M14.4 22v-9.2l6-1.6v8.4" fill="none" stroke="currentColor" stroke-linejoin="round"/>
+  <circle cx="12.7" cy="22" r="2.1" fill="currentColor"/><circle cx="18.7" cy="19.6" r="2.1" fill="currentColor"/>
+ </symbol>
+ <symbol id="i-voice" viewBox="0 0 32 32" overflow="visible">
+  <use href="#pod" width="32" height="32"/>
+  <path vector-effect="non-scaling-stroke" d="M10.8 21v-2.6a5.2 5.2 0 0 1 10.4 0V21" fill="none" stroke="currentColor" stroke-linecap="round"/>
+  <rect x="9.6" y="19.4" width="3.2" height="5.4" rx="1.4" fill="currentColor"/><rect x="19.2" y="19.4" width="3.2" height="5.4" rx="1.4" fill="currentColor"/>
+ </symbol>
+ <symbol id="i-share" viewBox="0 0 32 32" overflow="visible">
+  <use href="#pod" width="32" height="32"/>
+  <path vector-effect="non-scaling-stroke" d="M16 24v-7.2" fill="none" stroke="currentColor" stroke-linecap="round"/>
+  <path vector-effect="non-scaling-stroke" d="M16 19c-.4-2.6-2.4-3.8-4.6-3.5.1 2.5 2 3.8 4.6 3.5zM16 17.4c.4-2.8 2.6-4.3 5-4-.2 2.8-2.4 4.3-5 4z" fill="none" stroke="currentColor" stroke-linejoin="round"/>
+ </symbol>
+</defs></svg><div class="page"><svg class="pgrain"><rect width="100%" height="100%" filter="url(#grainF)"/></svg>
+<svg style="position:absolute;left:-330px;bottom:-360px" width="700" height="600"><circle cx="350" cy="300" r="120" fill="#2142FF" opacity=".55" filter="url(#sprayL)"/></svg>
+<div class="head">
+ <div><div class="kick"><b>V2</b> &nbsp;LIGHT ZINE / STREETWEAR</div><div style="display:flex;align-items:center;gap:18px"><svg width="130" height="54.6" viewBox="0 0 110 46">
+<path d="M10 27C24 9 80 6 102 17 92 38 32 42 10 27z" fill="none" stroke="#0F0F10" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M10 27c-4 0-6-2.5-6-6" fill="none" stroke="#0F0F10" stroke-width="1.6" stroke-linecap="round"/>
+<circle cx="35" cy="24.5" r="5.5" fill="#0F0F10"/><circle cx="52" cy="22.5" r="5.5" fill="#0F0F10"/>
+<circle cx="69" cy="21.5" r="5.5" fill="#0F0F10"/><circle cx="86" cy="21" r="9" fill="#2142FF" filter="url(#sprayS)"/><circle cx="86" cy="21" r="5.5" fill="#2142FF"/></svg><div class="big">豆莢浪歌</div></div></div>
+ <div class="sl" style="align-self:end;padding-bottom:6px">隨口唱一首，<br>短短幾秒天下行</div>
+ <div><div class="pal"><i style="background:#EDEAE2"></i><i style="background:#0F0F10"></i><i style="background:#2142FF"></i></div>
+ <div class="iconset"><figure><svg style="color:#2142FF"><use href="#i-sing"/></svg>唱</figure><figure><svg><use href="#i-melody"/></svg>旋律</figure><figure><svg><use href="#i-voice"/></svg>配樂</figure><figure><svg><use href="#i-share"/></svg>分享</figure></div></div>
+</div>
+<div class="row">
+<div class="wrap"><div class="cap"><span>A — 首次啟動 ONBOARDING</span><span>P.01</span></div><div class="phone"><div class="island"></div><div class="status"><span>9:41</span><i></i></div>
+<div class="mast"><span>DOUJIA LANGE®</span><span>ISSUE Nº001 — 2026</span></div>
+<div style="position:relative;height:392px">
+ <svg width="390" height="392" viewBox="0 0 390 392" style="position:absolute;inset:0">
+  <text x="22" y="318" font-family="Noto Sans CJK TC" font-weight="700" font-size="318" fill="#2142FF" opacity=".75" filter="url(#sprayM)">唱</text>
+  <text x="22" y="318" font-family="Noto Sans CJK TC" font-weight="700" font-size="318" fill="#2142FF">唱</text>
+  <rect x="0" y="150" width="390" height="5" fill="#EDEAE2"/><rect x="118" y="0" width="5" height="392" fill="#EDEAE2"/><rect x="0" y="246" width="390" height="5" fill="#EDEAE2"/>
+  <g transform="rotate(-18 200 220)">
+   <path d="M70 250C120 190 300 175 345 215 305 280 125 300 70 250z" fill="none" stroke="#0F0F10" stroke-width="1.6" stroke-linejoin="round"/>
+   <path d="M70 250c-14 1-24-8-24-22" fill="none" stroke="#0F0F10" stroke-width="1.6" stroke-linecap="round"/>
+   <circle cx="130" cy="244" r="15" fill="#0F0F10"/><circle cx="176" cy="236" r="16" fill="#0F0F10"/><circle cx="224" cy="231" r="16" fill="#0F0F10"/><circle cx="272" cy="229" r="15" fill="none" stroke="#0F0F10" stroke-width="1.6"/>
+  </g>
+  <g fill="#2142FF"><circle cx="348" cy="70" r="3.4"/><circle cx="360" cy="90" r="4.6"/><circle cx="348" cy="110" r="2.8"/></g>
+  <g fill="#0F0F10" opacity=".6"><circle cx="300" cy="40" r="1.2"/><circle cx="310" cy="52" r="0.8"/><circle cx="60" cy="350" r="1.1"/><circle cx="74" cy="360" r=".8"/></g>
+  <text x="24" y="378" font-family="Space Mono" font-size="10" letter-spacing="1" fill="#0F0F10">FIG.01 — 你的聲音，就是你的臉。</text>
+ </svg>
+ <div style="position:absolute;right:20px;top:120px;writing-mode:vertical-rl;font-size:13px;font-weight:700;letter-spacing:6px">隨口唱一首，短短幾秒天下行</div>
+</div>
+<div style="padding:0 24px">
+ <div style="font-size:34px;font-weight:700;line-height:1.2;letter-spacing:1px">只要聲音，<br>不用露臉。</div>
+ <div class="mono" style="font-size:10.5px;letter-spacing:1px;margin-top:10px;color:var(--mute)">SING → MELODY → MIX → SHARE</div>
+ <div style="margin-top:26px;border:1.5px solid var(--ink);height:62px;border-radius:3px;padding:8px 14px;position:relative">
+  <div class="mono" style="font-size:9.5px;letter-spacing:1px">NAME / 名字</div>
+  <div style="font-size:19px;color:#9A968E;font-weight:700;margin-top:1px;display:flex;align-items:center;letter-spacing:2px"><span style="width:2px;height:20px;background:var(--cob);margin-right:8px"></span>取個名字</div>
+ </div>
+ <div class="btn ink" style="margin-top:12px"><span style="display:flex;align-items:center;gap:12px"><i style="width:10px;height:10px;border-radius:50%;background:var(--cob);display:inline-block"></i>開始唱</span><span class="ar">→</span></div>
+</div>
+<div class="homebar"></div><svg class="grain"><rect width="100%" height="100%" filter="url(#grainF)"/></svg></div></div>
+<div class="wrap"><div class="cap"><span>B — 唱 SING HOME</span><span>P.02</span></div><div class="phone"><div class="island"></div><div class="status"><span>9:41</span><i></i></div>
+<div class="mast"><span>VOL.01 / SING</span><span>01 — 04</span></div>
+<div style="display:flex;align-items:flex-end;justify-content:space-between;padding:18px 24px 0">
+ <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:52px;font-weight:700;line-height:1">唱</span><span style="font-family:var(--disp);font-size:30px;letter-spacing:-.5px">SING</span></div>
+ <div class="mono" style="font-size:10px;text-align:right;line-height:1.5">HI, @YUKI_00<br>今日第 3 顆豆</div>
+</div>
+<div style="margin-top:16px"><div class="prog"><svg viewBox="0 0 300 56"><path d="M12 31C36 9 262 6 290 23 272 47 46 53 12 31z" fill="none" stroke="#0F0F10" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 31c-5 0-8-3-8-7" fill="none" stroke="#0F0F10" stroke-width="1.2" stroke-linecap="round"/><circle cx="72" cy="29" r="16" fill="#2142FF" opacity=".9" filter="url(#sprayS)"/><circle cx="72" cy="29" r="8.5" fill="#2142FF"/><circle cx="125" cy="27.5" r="7.5" fill="none" stroke="#9A968E" stroke-width="1.2"/><circle cx="178" cy="26.5" r="7.5" fill="none" stroke="#9A968E" stroke-width="1.2"/><circle cx="231" cy="26" r="7.5" fill="none" stroke="#9A968E" stroke-width="1.2"/></svg><div class="lbl"><span style="left:72px" class="on">唱</span><span style="left:125px" class="">旋律</span><span style="left:178px" class="">配樂</span><span style="left:231px" class="">分享</span></div></div></div>
+<svg width="390" height="350" viewBox="0 0 390 350" style="display:block;margin-top:2px">
+ <defs><path id="ringp" d="M195 175 m-140 0 a140 140 0 1 1 280 0 a140 140 0 1 1 -280 0"/></defs>
+ <circle cx="195" cy="175" r="118" fill="#2142FF" opacity=".7" filter="url(#sprayL)"/>
+ <text font-family="Space Mono" font-size="11" letter-spacing="0" fill="#0F0F10" font-weight="700"><textPath href="#ringp" textLength="872" lengthAdjust="spacing">TAP TO SING ✳ 點一下開始唱 ✳ TAP TO SING ✳ 點一下開始唱 ✳ TAP TO SING ✳ 點一下開始唱 ✳ </textPath></text>
+ <circle cx="195" cy="175" r="104" fill="#2142FF"/>
+ <use href="#headO" x="150" y="128" width="86" height="86" style="color:#EDEAE2;stroke-width:2"/>
+ <g fill="#EDEAE2"><circle cx="241" cy="153" r="3.4"/><circle cx="251" cy="174" r="4.5"/><circle cx="241" cy="195" r="2.8"/></g>
+</svg>
+<div style="text-align:center;margin-top:-8px"><span style="font-family:var(--disp);font-size:34px">00:00</span><span class="mono" style="font-size:12px;margin-left:8px">/ 15 SEC</span></div>
+<div style="margin:14px 46px 0;border:1.5px dashed var(--ink);padding:9px 0;text-align:center;font-size:13px;font-weight:700;letter-spacing:1px">安靜的地方・手機離嘴約20公分</div>
+<div class="tabbar"><div class="tab on"><svg><use href="#i-sing"/></svg></div><div class="tab"><svg><use href="#i-melody"/></svg></div><div class="tab"><svg><use href="#i-voice"/></svg></div><div class="tab"><svg><use href="#i-share"/></svg></div></div><div class="homebar"></div><svg class="grain"><rect width="100%" height="100%" filter="url(#grainF)"/></svg></div></div>
+<div class="wrap"><div class="cap"><span>C — 旋律 MELODY RESULT</span><span>P.03</span></div><div class="phone"><div class="island"></div><div class="status"><span>9:41</span><i></i></div>
+<div style="text-align:center;margin-top:6px"><span class="pill"><i></i>換聲處理中 · 好了通知你</span></div>
+<div style="margin-top:12px"><div class="prog"><svg viewBox="0 0 300 56"><path d="M12 31C36 9 262 6 290 23 272 47 46 53 12 31z" fill="none" stroke="#0F0F10" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 31c-5 0-8-3-8-7" fill="none" stroke="#0F0F10" stroke-width="1.2" stroke-linecap="round"/><circle cx="72" cy="29" r="8" fill="#0F0F10"/><circle cx="125" cy="27.5" r="16" fill="#2142FF" opacity=".9" filter="url(#sprayS)"/><circle cx="125" cy="27.5" r="8.5" fill="#2142FF"/><circle cx="178" cy="26.5" r="7.5" fill="none" stroke="#9A968E" stroke-width="1.2"/><circle cx="231" cy="26" r="7.5" fill="none" stroke="#9A968E" stroke-width="1.2"/></svg><div class="lbl"><span style="left:72px" class="">唱</span><span style="left:125px" class="on">旋律</span><span style="left:178px" class="">配樂</span><span style="left:231px" class="">分享</span></div></div></div>
+<div style="display:flex;align-items:flex-end;justify-content:space-between;padding:18px 24px 10px;border-bottom:1.5px solid var(--ink);margin:0 0 0">
+ <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:40px;font-weight:700;line-height:1">旋律</span><span style="font-family:var(--disp);font-size:22px">MELODY</span></div>
+ <div class="mono" style="font-size:10px;text-align:right;line-height:1.5">12.4 SEC<br>C MAJ · 96 BPM</div>
+</div>
+<svg width="390" height="222" viewBox="0 0 350 222" style="display:block;margin:0 auto">
+ <text x="18" y="22" font-family="Space Mono" font-size="9.5" letter-spacing="1" fill="#0F0F10">FIG.02 — 你的旋律</text>
+ <line x1="18" x2="332" y1="170" y2="170" stroke="#0F0F10" stroke-width=".9"/><line x1="18" x2="332" y1="144" y2="144" stroke="#0F0F10" stroke-width=".9"/><line x1="18" x2="332" y1="118" y2="118" stroke="#0F0F10" stroke-width=".9"/><line x1="18" x2="332" y1="92" y2="92" stroke="#0F0F10" stroke-width=".9"/><line x1="18" x2="332" y1="66" y2="66" stroke="#0F0F10" stroke-width=".9"/><circle cx="166.5" cy="113" r="24" fill="#2142FF" opacity=".8" filter="url(#sprayM)"/><line x1="166.5" x2="166.5" y1="30" y2="198" stroke="#2142FF" stroke-width="1.5"/><circle cx="166.5" cy="113" r="7.5" fill="#2142FF"/><ellipse cx="39.8" cy="113" rx="7.3" ry="5.7" fill="#0F0F10" transform="rotate(-18 39.8 113)"/><ellipse cx="51.3" cy="113" rx="7.3" ry="5.7" fill="#0F0F10" transform="rotate(-18 51.3 113)"/><ellipse cx="68.6" cy="100" rx="8.6" ry="7.0" fill="#0F0F10" transform="rotate(-18 68.6 100)"/><ellipse cx="85.8" cy="74" rx="7.3" ry="5.7" fill="#0F0F10" transform="rotate(-18 85.8 74)"/><ellipse cx="97.3" cy="74" rx="7.3" ry="5.7" fill="#0F0F10" transform="rotate(-18 97.3 74)"/><ellipse cx="108.9" cy="87" rx="7.3" ry="5.7" fill="#0F0F10" transform="rotate(-18 108.9 87)"/><ellipse cx="126.1" cy="113" rx="8.6" ry="7.0" fill="#0F0F10" transform="rotate(-18 126.1 113)"/><ellipse cx="143.4" cy="126" rx="7.3" ry="5.7" fill="#0F0F10" transform="rotate(-18 143.4 126)"/><ellipse cx="154.9" cy="126" rx="7.3" ry="5.7" fill="#0F0F10" transform="rotate(-18 154.9 126)"/><ellipse cx="178.0" cy="87" rx="7.3" ry="5.7" fill="none" stroke="#0F0F10" stroke-width="1.5" transform="rotate(-18 178.0 87)"/><ellipse cx="189.5" cy="61" rx="7.3" ry="5.7" fill="none" stroke="#0F0F10" stroke-width="1.5" transform="rotate(-18 189.5 61)"/><ellipse cx="206.8" cy="48" rx="8.6" ry="7.0" fill="none" stroke="#0F0F10" stroke-width="1.5" transform="rotate(-18 206.8 48)"/><ellipse cx="224.0" cy="61" rx="7.3" ry="5.7" fill="none" stroke="#0F0F10" stroke-width="1.5" transform="rotate(-18 224.0 61)"/><ellipse cx="235.6" cy="87" rx="7.3" ry="5.7" fill="none" stroke="#0F0F10" stroke-width="1.5" transform="rotate(-18 235.6 87)"/><ellipse cx="247.1" cy="100" rx="7.3" ry="5.7" fill="none" stroke="#0F0F10" stroke-width="1.5" transform="rotate(-18 247.1 100)"/><ellipse cx="264.4" cy="113" rx="8.6" ry="7.0" fill="none" stroke="#0F0F10" stroke-width="1.5" transform="rotate(-18 264.4 113)"/><ellipse cx="281.6" cy="139" rx="7.3" ry="5.7" fill="none" stroke="#0F0F10" stroke-width="1.5" transform="rotate(-18 281.6 139)"/><ellipse cx="293.1" cy="126" rx="7.3" ry="5.7" fill="none" stroke="#0F0F10" stroke-width="1.5" transform="rotate(-18 293.1 126)"/><ellipse cx="316.2" cy="113" rx="9.9" ry="8.3" fill="none" stroke="#0F0F10" stroke-width="1.5" transform="rotate(-18 316.2 113)"/>
+ <text x="18" y="214" font-family="Space Mono" font-size="9.5" fill="#77736C">00:05</text>
+ <g><rect x="250" y="198" width="1.5" height="16" fill="#0F0F10"/><rect x="252.5" y="198" width="2" height="16" fill="#0F0F10"/><rect x="256.5" y="198" width="1" height="16" fill="#0F0F10"/><rect x="258.5" y="198" width="3" height="16" fill="#0F0F10"/><rect x="262.5" y="198" width="1.5" height="16" fill="#0F0F10"/><rect x="266.0" y="198" width="1" height="16" fill="#0F0F10"/><rect x="269.0" y="198" width="1" height="16" fill="#0F0F10"/><rect x="271.0" y="198" width="1" height="16" fill="#0F0F10"/><rect x="273.5" y="198" width="2" height="16" fill="#0F0F10"/><rect x="276.5" y="198" width="1" height="16" fill="#0F0F10"/><rect x="278.5" y="198" width="3" height="16" fill="#0F0F10"/><rect x="283.0" y="198" width="1" height="16" fill="#0F0F10"/><rect x="286.0" y="198" width="1" height="16" fill="#0F0F10"/><rect x="288.0" y="198" width="3" height="16" fill="#0F0F10"/><rect x="292.0" y="198" width="3" height="16" fill="#0F0F10"/><rect x="297.0" y="198" width="2" height="16" fill="#0F0F10"/><rect x="300.0" y="198" width="1" height="16" fill="#0F0F10"/><rect x="302.0" y="198" width="3" height="16" fill="#0F0F10"/><rect x="306.0" y="198" width="1.5" height="16" fill="#0F0F10"/><rect x="309.0" y="198" width="1" height="16" fill="#0F0F10"/><rect x="312.0" y="198" width="1" height="16" fill="#0F0F10"/><rect x="315.0" y="198" width="1.5" height="16" fill="#0F0F10"/><rect x="318.5" y="198" width="1" height="16" fill="#0F0F10"/><rect x="320.5" y="198" width="3" height="16" fill="#0F0F10"/><rect x="325.5" y="198" width="1" height="16" fill="#0F0F10"/><rect x="328.0" y="198" width="1" height="16" fill="#0F0F10"/><rect x="331.0" y="198" width="1" height="16" fill="#0F0F10"/><rect x="334.0" y="198" width="1" height="16" fill="#0F0F10"/><rect x="337.0" y="198" width="1" height="16" fill="#0F0F10"/><rect x="339.5" y="198" width="3" height="16" fill="#0F0F10"/><rect x="344.0" y="198" width="1.5" height="16" fill="#0F0F10"/><rect x="347.0" y="198" width="3" height="16" fill="#0F0F10"/><rect x="351.5" y="198" width="1.5" height="16" fill="#0F0F10"/><rect x="354.5" y="198" width="1" height="16" fill="#0F0F10"/></g>
+</svg>
+<div style="display:flex;justify-content:center;align-items:center;gap:30px;margin-top:6px">
+ <div style="width:54px;height:54px;border-radius:50%;border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F0F10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M5 2.5V7h4.5"/></svg></div>
+ <div style="width:84px;height:84px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center">
+  <svg width="30" height="30" viewBox="0 0 30 30"><path d="M9 5.5v19c0 1 1 1.6 1.9 1.1l15-9.5c.8-.5.8-1.7 0-2.2l-15-9.5C10 3.9 9 4.5 9 5.5z" fill="#EDEAE2"/></svg></div>
+ <div style="width:54px;height:54px;border-radius:50%;border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center">
+  <svg width="27" height="27" style="color:#0F0F10;stroke-width:1.6"><use href="#i-sing"/></svg></div>
+</div>
+<div class="btn cob" style="margin:22px 24px 0"><span>下一顆豆</span><span class="ar">→</span></div>
+<div class="tabbar"><div class="tab"><svg><use href="#i-sing"/></svg></div><div class="tab on"><svg><use href="#i-melody"/></svg></div><div class="tab"><svg><use href="#i-voice"/></svg></div><div class="tab"><svg><use href="#i-share"/></svg></div></div><div class="homebar"></div><svg class="grain"><rect width="100%" height="100%" filter="url(#grainF)"/></svg></div></div>
+</div>
+<div class="foot"><span>PAPER #EDEAE2 · INK #0F0F10 · COBALT #2142FF</span><span>STENCIL CUT / SPRAY OVERSPRAY / PRINTED SCORE</span><span>DOUJIA LANGE® STYLE EXPLORATION</span></div>
+</div><script>document.documentElement.setAttribute("data-h",document.querySelector(".page").getBoundingClientRect().height)</script></body></html>

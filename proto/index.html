@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>豆莢浪歌 · v1 原型</title>
+<style>
+:root{--bg:#0A1310;--fg:#F1F1E6;--mute:#9AA8A1;--dim:#66746E;--card:rgba(255,255,255,.045);--bd:rgba(255,255,255,.08);
+--mint:linear-gradient(90deg,#C3E8A3 0%,#94CF8F 55%,#6DB98A 100%);--mintc:#A9DE9C;
+--sans:"Noto Sans CJK TC","PingFang TC","Microsoft JhengHei",sans-serif;--serif:"Noto Serif CJK TC","Songti TC",serif}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#050807}
+body{display:flex;align-items:center;justify-content:center;font-family:var(--sans);color:var(--fg)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,textarea{font:inherit;color:var(--fg)}
+#app{width:390px;height:844px;position:relative;overflow:hidden;
+ background:radial-gradient(500px 420px at 85% 30%,rgba(40,90,66,.35),transparent 70%),radial-gradient(420px 380px at 0% 75%,rgba(36,80,60,.30),transparent 70%),linear-gradient(180deg,#0D1814,#09110E)}
+.swoosh{position:absolute;inset:0;pointer-events:none;opacity:.9}
+/* status */
+.status{position:absolute;top:0;left:0;right:0;height:50px;display:flex;justify-content:space-between;align-items:center;padding:4px 26px 0 34px;font-weight:600;font-size:15px;z-index:50;pointer-events:none}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:114px;height:32px;border-radius:18px;background:#000;z-index:60}
+.homebar{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:#E9EAE2;z-index:60}
+/* views */
+.view{position:absolute;inset:0;display:none;flex-direction:column}
+.view.on{display:flex;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.scroll{position:absolute;top:96px;left:0;right:0;bottom:112px;overflow-y:auto;padding:0 16px 24px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.topbar{position:absolute;top:52px;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 18px 0 14px;z-index:20}
+.back{width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+.chip{height:34px;padding:0 13px;border-radius:17px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.04);display:inline-flex;align-items:center;gap:6px;font-size:14px}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:#B9E59A;box-shadow:0 0 8px #B9E59A}
+.h1{font-size:26px;font-weight:700;letter-spacing:1px;line-height:1.3}
+.sub{font-size:13.5px;color:#C9D0CB;margin-top:6px;letter-spacing:.5px;line-height:1.6}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:14px;margin-top:12px}
+.sec{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.sec:before{content:"";width:3px;height:13px;border-radius:2px;background:var(--mintc)}
+.sec .r{margin-left:auto;font-size:12px;font-weight:400;color:var(--mute)}
+.btn{height:54px;border-radius:27px;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font-size:17px;font-weight:700;letter-spacing:2px;transition:transform .12s,filter .2s}
+.btn:active{transform:scale(.98)}
+.btn.mint{background:var(--mint);color:#13261B;box-shadow:0 6px 24px rgba(140,205,140,.18)}
+.btn.glass{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);font-weight:500}
+.btn.sm{height:42px;font-size:14px;letter-spacing:1px}
+.link{font-size:13px;color:var(--mute);text-decoration:underline;text-underline-offset:3px}
+.toast{position:absolute;left:50%;bottom:128px;transform:translateX(-50%) translateY(20px);background:rgba(20,32,27,.95);border:1px solid rgba(185,229,154,.3);padding:10px 16px;border-radius:20px;font-size:13px;opacity:0;transition:.3s;z-index:90;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%)}
+/* tabbar */
+.tabbar{position:absolute;left:10px;right:10px;bottom:30px;height:72px;border-radius:36px;background:rgba(22,32,28,.82);border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(16px);display:flex;justify-content:space-around;align-items:center;z-index:40}
+.tab{width:62px;height:62px;display:flex;align-items:center;justify-content:center;position:relative}
+.tab .ring{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;transition:.3s}
+.tab svg{width:24px;height:24px}
+.tab .bean{position:absolute;width:46px;height:50px;opacity:0;transform:scale(.6) rotate(-10deg);transition:.35s cubic-bezier(.3,1.5,.5,1)}
+.tab.on .ring{border-color:transparent;background:transparent}
+.tab.on .bean{opacity:1;transform:scale(1) rotate(-8deg)}
+.tab.on .ic{position:relative;z-index:2;color:#14281C}
+.tab .ic{color:#E9ECE4;display:flex}
+.tab.done .ring{border-color:rgba(185,229,154,.55)}
+.tab .badge{position:absolute;top:10px;right:12px;width:8px;height:8px;border-radius:50%;background:#F2A35E;display:none;z-index:3}
+/* onboard */
+.logo{position:absolute;top:58px;left:40px;right:30px;display:flex;align-items:center;gap:8px}
+.logo img{width:78px;height:78px;margin-top:-6px}
+.logo .t{font-family:var(--serif);font-weight:700;font-size:50px;letter-spacing:5px;color:#EEF0D8;text-shadow:0 2px 14px rgba(0,0,0,.4);line-height:1}
+.slog{position:absolute;top:136px;left:108px;width:240px;text-align:center;font-size:14.5px;letter-spacing:2px;color:#E4E7D6}
+.hero{position:absolute;top:164px;left:0;width:390px;height:278px;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 9%,#000 82%,transparent)}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .8s ease}
+.slide.on{opacity:1}
+.slide img.full{width:100%;height:100%;object-fit:cover}
+.slide .bgb{position:absolute;inset:-20px;background-size:cover;background-position:center;filter:blur(16px) brightness(.55) saturate(1.1)}
+.slide .pp{position:absolute;top:0;height:100%;left:50%;transform:translateX(-50%) scale(1.04);filter:drop-shadow(0 8px 24px rgba(0,0,0,.6))}
+.slide.on .pp{animation:kb 4s ease-out forwards}
+@keyframes kb{from{transform:translateX(-50%) scale(1.0)}to{transform:translateX(-50%) scale(1.07)}}
+.slide .cap{position:absolute;right:16px;top:14px;font-size:12px;padding:4px 10px;border-radius:12px;background:rgba(0,0,0,.4);color:#E4E7D6}
+.dots{position:absolute;top:430px;left:0;right:0;display:flex;gap:9px;justify-content:center;z-index:5}
+.dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35);transition:.3s}
+.dots i.on{width:16px;border-radius:5px;background:#CDEBA9}
+.ob-txt{position:absolute;top:452px;left:36px;right:30px}
+.ob-txt .h{font-size:25px;font-weight:500;letter-spacing:2px;line-height:1.48}
+.ob-txt .s{font-size:14px;letter-spacing:1px;line-height:1.6;color:#E1E5DC;margin-top:6px}
+.field{height:46px;border-radius:23px;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.18);display:flex;align-items:center;padding:0 16px;gap:10px}
+.field input{flex:1;background:none;border:0;outline:0;font-size:14.5px;letter-spacing:1px}
+.field input::placeholder{color:#B9C1BC}
+.field .cnt{font-size:13px;color:#B9C1BC}
+/* bean1 */
+.wavemark{display:flex;justify-content:center;gap:3px;height:28px;align-items:center;margin-top:6px}
+.wavemark i{width:2.5px;border-radius:2px;background:#E9ECE4}
+.mic{position:relative;width:300px;height:300px;margin:4px auto 0}
+.mic .r{position:absolute;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}
+.mic .r1{width:262px;height:262px;background:radial-gradient(circle,rgba(70,120,90,.0) 55%,rgba(70,130,95,.25) 72%,rgba(70,130,95,.05) 100%);border:1px solid rgba(140,200,150,.10)}
+.mic .r2{width:206px;height:206px;background:radial-gradient(circle,rgba(170,220,150,.0) 60%,rgba(160,220,140,.75) 78%,rgba(90,170,110,.35) 100%);box-shadow:0 0 60px rgba(150,215,140,.35)}
+.mic .core{width:148px;height:148px;background:radial-gradient(circle at 45% 40%,#FBF6E6,#EFE8D2 70%,#DCE3C6);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 6px rgba(200,235,170,.25),0 0 40px rgba(200,235,170,.35);transition:.3s}
+.mic.rec .r2{animation:pulse 1.2s ease-in-out infinite}
+.mic.rec .core{background:radial-gradient(circle at 45% 40%,#FFF3EC,#F6D9CC 70%,#EBC0AE)}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.07)}}
+.wave{display:flex;align-items:center;justify-content:center;gap:3px;height:84px;margin-top:2px}
+.wave i{width:3.4px;border-radius:2px;transition:height .08s}
+.timer{text-align:center;font-size:18px;letter-spacing:2px;margin-top:10px;font-variant-numeric:tabular-nums}
+.timer span{color:var(--dim)}
+.hint{text-align:center;font-size:12.5px;color:var(--mute);margin-top:10px;letter-spacing:.5px}
+.upl{display:flex;justify-content:center;margin-top:12px}
+.proc{display:flex;align-items:center;gap:10px;justify-content:center;font-size:14px;color:#D9E6D6;margin-top:16px}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(185,229,154,.25);border-top-color:#B9E59A;animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* song card */
+.song{display:flex;gap:14px;align-items:center}
+.song img{width:118px;height:112px;border-radius:14px;object-fit:cover;flex:none}
+.song .tt{font-size:19px;font-weight:600;letter-spacing:1px}
+.song .by{font-size:13px;color:#C9D0CB;margin-top:4px}
+.mw{display:flex;align-items:center;gap:2px;height:26px;margin-top:8px}
+.mw i{width:2px;border-radius:1px;background:rgba(220,230,224,.55)}
+.mw i.p{background:#B9E59A}
+.pl{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:13px;color:#C9D0CB;font-variant-numeric:tabular-nums}
+.pbtn{width:34px;height:34px;border-radius:50%;background:#0E1612;border:1.5px solid rgba(255,255,255,.75);display:flex;align-items:center;justify-content:center}
+.pbtn.big{width:56px;height:56px;background:var(--mint);border:0}
+.seg{display:flex;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:20px;padding:3px;margin-top:12px}
+.seg button{flex:1;height:32px;border-radius:16px;font-size:13.5px;color:var(--mute);transition:.2s}
+.seg button.on{background:rgba(185,229,154,.18);color:#DDF2CC;box-shadow:inset 0 0 0 1px rgba(185,229,154,.4)}
+.ta{width:100%;min-height:118px;border-radius:14px;border:1.5px solid rgba(185,229,154,.45);background:rgba(0,0,0,.2);padding:12px 14px;font-size:15px;line-height:1.7;outline:0;resize:none}
+.ta::placeholder{color:#93A49B}
+.row{display:flex;gap:8px;align-items:center}
+.mini{height:32px;padding:0 12px;border-radius:16px;border:1px solid rgba(255,255,255,.18);font-size:12.5px;color:#D6DDD8;display:inline-flex;align-items:center;gap:6px}
+.inp{width:100%;height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.18);padding:0 14px;font-size:15px;outline:0}
+details{margin-top:12px;border-top:1px solid var(--bd);padding-top:10px}
+summary{font-size:13.5px;color:var(--mute);list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px}
+summary::-webkit-details-marker{display:none}
+details[open] summary .car{transform:rotate(90deg)}
+.car{transition:.2s;display:inline-block}
+.adv{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:14px}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.2);font-size:18px}
+/* bean3 */
+.acc{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin:0 -14px;padding:0 14px}
+.acc::-webkit-scrollbar{display:none}
+.ac{flex:none;width:96px;height:96px;border-radius:16px;padding:10px;position:relative;border:1px solid var(--bd);background:rgba(255,255,255,.04);display:flex;flex-direction:column;justify-content:space-between;text-align:left;transition:.2s}
+.ac .em{font-size:22px}
+.ac .n{font-size:14px;font-weight:600}
+.ac .d{font-size:11px;color:var(--mute)}
+.ac.on{border-color:rgba(185,229,154,.8);background:rgba(185,229,154,.10);box-shadow:0 0 18px rgba(185,229,154,.15)}
+.ac.soon,.av.soon{opacity:.38;filter:grayscale(1);pointer-events:none}
+.soon-t{position:absolute;top:8px;right:8px;font-size:10px;padding:2px 6px;border-radius:8px;background:rgba(255,255,255,.12);color:#DDE}
+.avs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -14px;padding:2px 14px}
+.avs::-webkit-scrollbar{display:none}
+.av{flex:none;width:68px;text-align:center;font-size:12.5px;position:relative;padding:6px 0;border-radius:14px;transition:.2s}
+.av img{width:58px;height:58px;border-radius:50%;display:block;margin:0 auto 6px;border:2px solid transparent;box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+.av .sm{display:block;font-size:10px;color:var(--mute);margin-top:1px;white-space:nowrap}
+.av.on{background:rgba(255,255,255,.05)}
+.av.on img{border-color:#B9E59A;box-shadow:0 0 14px rgba(185,229,154,.45)}
+.av .x{position:absolute;top:4px;right:6px;width:18px;height:18px;border-radius:50%;background:#F1F1E6;color:#111;font-size:12px;line-height:18px;display:none}
+.av.on .x{display:block}
+.av .st{position:absolute;bottom:22px;right:-2px;font-size:9.5px;padding:1px 5px;border-radius:7px;background:rgba(255,255,255,.12)}
+.queue{display:none;margin-top:12px;border-radius:14px;padding:10px 12px;background:rgba(242,163,94,.08);border:1px solid rgba(242,163,94,.35)}
+.queue.on{display:block}
+.queue .q1{display:flex;align-items:center;gap:8px;font-size:13px;color:#F6CDA6}
+.queue .q1 i{width:7px;height:7px;border-radius:50%;background:#F2A35E;box-shadow:0 0 8px #F2A35E;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.35}}
+.bar{height:5px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:8px;overflow:hidden}
+.bar b{display:block;height:100%;width:0;background:linear-gradient(90deg,#F2A35E,#F6CDA6);border-radius:3px;transition:width .4s}
+.queue.ok{background:rgba(185,229,154,.08);border-color:rgba(185,229,154,.4)}
+.queue.ok .q1{color:#D4F0C0}.queue.ok .q1 i{background:#B9E59A;box-shadow:0 0 8px #B9E59A;animation:none}
+.queue.ok .bar b{background:var(--mint)}
+/* bean4 */
+.ths{display:flex;gap:8px;flex-wrap:nowrap}
+.th{width:62px;height:62px;border-radius:12px;position:relative;flex:none;background-size:cover;background-position:center}
+.th .x{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(10,10,10,.75);color:#fff;font-size:11px;line-height:18px;text-align:center}
+.add{width:62px;height:62px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--bd);font-size:26px;font-weight:300;display:flex;align-items:center;justify-content:center;flex:none}
+.render{margin-top:12px;display:none}
+.render.on{display:block}
+.prev{display:none;gap:14px;align-items:flex-start;margin-top:12px}
+.prev.on{display:flex}
+.v916{width:150px;height:266px;border-radius:16px;overflow:hidden;position:relative;flex:none;background:#000;border:1px solid var(--bd)}
+.v916 .fr{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .8s}
+.v916 .fr.on{opacity:1;animation:kb2 3s linear forwards}
+@keyframes kb2{from{transform:scale(1)}to{transform:scale(1.1)}}
+.v916 .lyr{position:absolute;left:8px;right:8px;bottom:26px;text-align:center;font-size:13px;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.9);letter-spacing:1px}
+.v916 .wm{position:absolute;left:8px;top:8px;font-size:10px;font-family:var(--serif);opacity:.85}
+.v916 .pg{position:absolute;left:8px;right:8px;bottom:10px;height:3px;background:rgba(255,255,255,.25);border-radius:2px}
+.v916 .pg b{display:block;height:100%;width:30%;background:#fff;border-radius:2px}
+.share{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 6px;margin-top:4px}
+.sh{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11.5px;color:#D6DDD8}
+.sh i{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:15px;color:#fff}
+.credits{font-size:11px;color:var(--dim);line-height:1.6;margin-top:12px}
+.note{font-size:12px;color:#C9D0CB;margin-top:10px;display:flex;gap:6px}
+/* panel */
+.panel{position:absolute;inset:0;z-index:80;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.3s}
+.panel.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;top:0;right:0;bottom:0;width:340px;background:linear-gradient(180deg,#12201B,#0B1411);border-left:1px solid var(--bd);transform:translateX(100%);transition:.35s cubic-bezier(.2,.8,.2,1);padding:62px 16px 30px;overflow-y:auto;scrollbar-width:none}
+.panel.on .sheet{transform:none}
+.li{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.li:last-child{border:0}
+.li img{width:46px;height:46px;border-radius:10px;object-fit:cover}
+.li .a{flex:1;min-width:0}.li .a b{display:block;font-size:14.5px;font-weight:600}.li .a span{font-size:12px;color:var(--mute)}
+.tag{font-size:11.5px;padding:3px 9px;border-radius:10px;background:rgba(185,229,154,.15);color:#D4F0C0;white-space:nowrap}
+.tag.w{background:rgba(242,163,94,.12);color:#F6CDA6}
+/* landing */
+.land-hero{position:absolute;top:0;left:0;right:0;height:470px;background-size:cover;background-position:center 30%}
+.land-hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,19,16,.2),rgba(10,19,16,.1) 40%,#0A1310 96%)}
+.banner{margin-top:4px;font-size:12.5px;padding:8px 12px;border-radius:12px;background:rgba(185,229,154,.1);border:1px solid rgba(185,229,154,.3);color:#D4F0C0}
+.hidden{display:none!important}
+.demo .view.on{animation:none}.demo *{transition:none!important}
+#v-b1.isdone .mic{transform:scale(.78);margin-top:-20px;margin-bottom:-30px;opacity:.55}
+</style>
+</head>
+<body>
+<div id="app">
+ <svg class="swoosh" viewBox="0 0 390 844" preserveAspectRatio="none">
+  <defs><linearGradient id="sw" x1="0" x2="1"><stop offset="0" stop-color="#4FA77C" stop-opacity="0"/><stop offset=".5" stop-color="#4FA77C" stop-opacity=".35"/><stop offset="1" stop-color="#4FA77C" stop-opacity="0"/></linearGradient></defs>
+  <path d="M-40 360C60 250 230 210 430 230" stroke="url(#sw)" stroke-width="2.4" fill="none"/>
+  <path d="M-30 560C80 470 250 460 420 380" stroke="url(#sw)" stroke-width="3" fill="none"/>
+  <path d="M380 250C300 330 290 420 330 520" stroke="url(#sw)" stroke-width="1.2" fill="none"/>
+ </svg>
+ <div class="island"></div>
+ <div class="status"><span>9:41</span>
+  <svg width="70" height="13" viewBox="0 0 70 13" fill="#F1F1E6"><rect x="0" y="8" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="7" rx="1"/><rect x="10" y="3.5" width="3" height="9.5" rx="1"/><rect x="15" y="1" width="3" height="12" rx="1"/>
+  <path d="M31 4.2a9 9 0 0 1 12 0l-1.4 1.5a7 7 0 0 0-9.2 0zM33.4 6.8a5.5 5.5 0 0 1 7.2 0l-1.5 1.5a3.3 3.3 0 0 0-4.2 0zM37 9.4l1.6 1.7L37 12.7l-1.6-1.6z"/>
+  <rect x="47.5" y="1.5" width="20" height="10" rx="3" fill="none" stroke="#F1F1E6" stroke-opacity=".5"/><rect x="49.5" y="3.5" width="16" height="6" rx="1.5"/><rect x="68.5" y="4.5" width="1.5" height="4" rx=".7" opacity=".5"/></svg></div>
+
+ <!-- ===== ONBOARD ===== -->
+ <section class="view" id="v-onboard">
+  <div class="hero" id="hero"></div>
+  <div class="logo"><img src="img/logo-pod.png" alt=""><span class="t">豆莢浪歌</span></div>
+  <div class="slog"><span style="opacity:.7">—</span> 一段聲音・長出無限可能 <span style="opacity:.7">—</span></div>
+  <div class="dots" id="dots"></div>
+  <div class="ob-txt">
+   <div class="h">給你的聲音<br>一個名字</div>
+   <div class="s">這是你在豆莢浪歌的第一首歌<br>取個名字，開始創作吧！</div>
+   <div class="field" style="margin-top:12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9ECE4" stroke-width="1.6" stroke-linecap="round"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19l7-7"/></svg>
+    <input id="name" maxlength="20" placeholder="給自己取個名字"><span class="cnt" id="cnt">0/20</span></div>
+   <button class="btn mint" style="margin-top:18px;height:57px;border-radius:29px" id="startBtn">開始唱 <span style="font-size:20px">→</span></button>
+  </div>
+ </section>
+
+ <!-- ===== BEAN 1 唱 ===== -->
+ <section class="view" id="v-b1">
+  <div class="topbar"><button class="back" data-back><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F1F1E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+   <div style="display:flex;gap:8px"><button class="chip" data-mypod>我的豆莢<span class="dot hidden" id="podDot"></span></button><button class="chip" data-skip>跳過</button></div></div>
+  <div style="position:absolute;top:96px;left:0;right:0;bottom:112px">
+   <div class="banner hidden" id="contBanner" style="margin:0 20px 6px">接著唱《夏天的味道》・ 不用註冊，直接唱</div>
+   <div class="wavemark" id="wm"></div>
+   <div style="text-align:center;margin-top:8px"><div class="h1" style="font-size:27px" id="b1t">現在就唱一段吧</div><div class="sub" style="font-size:14.5px;margin-top:4px" id="b1s">無論是哼、唱、說話，都可以</div></div>
+   <div class="mic" id="mic"><div class="r r1"></div><div class="r r2"></div>
+    <button class="r core" id="micBtn" aria-label="錄音"><svg id="micIc" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#141A16" stroke-width="2" stroke-linecap="round"><rect x="9" y="2.5" width="6" height="12" rx="3" fill="#141A16"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/></svg></button></div>
+   <div id="b1rec">
+    <div class="wave" id="wave"></div>
+    <div class="timer" id="timer">00:00 <span>/ 00:30</span></div>
+    <div class="hint" id="hint">安靜的地方・手機離嘴約20公分</div>
+    <div class="upl" id="upl"><button class="mini"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D6DDD8" stroke-width="2" stroke-linecap="round"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>或上傳一段錄音</button></div>
+   </div>
+   <div id="b1proc" class="hidden"><div class="proc"><span class="spin"></span>自動降噪中…</div><div class="hint">幫你把背景雜音拿掉一點</div></div>
+   <div id="b1done" class="hidden" style="padding:0 20px">
+    <div class="card" style="display:flex;align-items:center;gap:12px;margin-top:2px">
+     <button class="pbtn big" data-play="rec"><svg width="18" height="18" viewBox="0 0 14 14"><path class="pi" d="M3 1.8v10.4c0 .6.6.9 1.1.6l8.2-5.2c.4-.3.4-.9 0-1.2L4.1 1.2C3.6.9 3 1.2 3 1.8z" fill="#13261B"/></svg></button>
+     <div style="flex:1"><div style="font-size:15px;font-weight:600">試聽你的聲音 <span class="tag" style="margin-left:4px">已降噪 ✓</span></div><div class="mw" id="recMw"></div></div>
+     <button class="mini" id="redo">重錄</button></div>
+    <button class="btn mint" style="margin-top:14px" data-next>下一顆豆：旋律 →</button>
+   </div>
+  </div>
+ </section>
+
+ <!-- ===== BEAN 2 旋律 ===== -->
+ <section class="view" id="v-b2">
+  <div class="topbar"><button class="back" data-back><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F1F1E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+   <div style="display:flex;gap:8px"><button class="chip" data-mypod>我的豆莢</button><button class="chip" data-skip>跳過</button></div></div>
+  <div class="scroll">
+   <div class="h1" style="margin-top:8px">你的旋律已完成！</div>
+   <div class="sub">聽聽看，再幫它加上歌詞和歌名。</div>
+   <div class="card">
+    <div class="song"><img src="img/cover.jpg" alt=""><div style="flex:1;min-width:0"><div class="tt" data-title>夏天的味道</div><div class="by">by <span data-uname>你</span></div>
+     <div class="mw" data-mw="mel"></div>
+     <div class="pl"><button class="pbtn" data-play="mel"><svg width="13" height="13" viewBox="0 0 14 14"><path class="pi" d="M3 1.8v10.4c0 .6.6.9 1.1.6l8.2-5.2c.4-.3.4-.9 0-1.2L4.1 1.2C3.6.9 3 1.2 3 1.8z" fill="#F1F1E6"/></svg></button><span data-time="mel">0:00 / 0:30</span></div></div></div>
+    <div class="seg" id="melSeg"><button class="on">原聲</button><button>鋼琴版</button></div>
+   </div>
+   <div class="card">
+    <div class="sec">歌詞</div>
+    <textarea class="ta" id="lyrics" placeholder="貼上或打字歌詞&#10;（一行一句，會變成影片字幕）"></textarea>
+    <div class="row" style="margin-top:10px;justify-content:space-between">
+     <button class="mini" id="asr"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D6DDD8" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/></svg>自動辨識<span style="color:var(--dim)">（準確度有限，請檢查）</span></button>
+     <button class="link" id="nolyr">這段沒有歌詞</button></div>
+   </div>
+   <div class="card">
+    <div class="sec">歌名</div>
+    <input class="inp" id="title" maxlength="20" value="夏天的味道">
+    <details><summary><span class="car">›</span>進階設定</summary>
+     <div class="adv"><span>下載旋律檔（MIDI）</span><button class="mini" id="dl">下載</button></div>
+     <div class="adv"><span>速度</span><div class="stepper"><button data-tempo="-1">−</button><span id="tempo" style="min-width:52px;text-align:center">100%</span><button data-tempo="1">+</button></div></div>
+    </details>
+   </div>
+   <button class="btn mint" style="margin-top:16px" data-next>下一顆豆：配樂換聲 →</button>
+  </div>
+ </section>
+
+ <!-- ===== BEAN 3 配樂換聲 ===== -->
+ <section class="view" id="v-b3">
+  <div class="topbar"><button class="back" data-back><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F1F1E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+   <div style="display:flex;gap:8px"><button class="chip" data-mypod>我的豆莢</button><button class="chip" data-skip>跳過</button></div></div>
+  <div class="scroll">
+   <div class="h1" style="margin-top:8px">幫它配樂、換個聲音</div>
+   <div class="sub">選一種伴奏，再挑一個喜歡的聲音。</div>
+   <div class="card" style="padding:10px 12px">
+    <div class="song"><img src="img/cover.jpg" alt="" style="width:64px;height:64px;border-radius:12px"><div style="flex:1;min-width:0"><div class="tt" style="font-size:16px" data-title>夏天的味道</div>
+     <div class="pl" style="margin-top:4px"><button class="pbtn" data-play="mix"><svg width="13" height="13" viewBox="0 0 14 14"><path class="pi" d="M3 1.8v10.4c0 .6.6.9 1.1.6l8.2-5.2c.4-.3.4-.9 0-1.2L4.1 1.2C3.6.9 3 1.2 3 1.8z" fill="#F1F1E6"/></svg></button><div class="mw" data-mw="mix" style="margin:0;flex:1"></div></div></div></div>
+   </div>
+   <div class="card">
+    <div class="sec">伴奏</div>
+    <div class="acc" id="acc">
+     <button class="ac on"><span class="em">🌙</span><span><div class="n">抒情</div><div class="d">慢板・弦樂</div></span></button>
+     <button class="ac"><span class="em">☀️</span><span><div class="n">溫暖</div><div class="d">木吉他・輕打</div></span></button>
+     <button class="ac"><span class="em">🎹</span><span><div class="n">簡約鋼琴</div><div class="d">只有鋼琴</div></span></button>
+     <button class="ac soon"><span class="soon-t">即將推出</span><span class="em">🎸</span><span><div class="n">搖滾</div><div class="d">電吉他・鼓</div></span></button>
+    </div>
+   </div>
+   <div class="card">
+    <div class="sec">聲音<span class="r">換聲在雲端處理</span></div>
+    <div class="avs" id="avs">
+     <button class="av on" data-v="原聲"><span class="x">×</span><img src="img/av-orig.png" alt="">原聲</button>
+     <button class="av" data-v="女聲A"><span class="x">×</span><img src="img/av-female.png" alt="">女聲A<span class="sm">つくよみちゃん</span></button>
+     <button class="av" data-v="女聲B"><span class="x">×</span><img src="img/av-femaleb.png" alt="">女聲B</button>
+     <button class="av soon"><img src="img/av-male.png" alt="">男聲<span class="sm">即將推出</span></button>
+     <button class="av soon"><img src="img/av-toon.png" alt="">卡通<span class="sm">即將推出</span></button>
+     <button class="av soon"><img src="img/av-robot.png" alt="">機器人<span class="sm">即將推出</span></button>
+    </div>
+    <div class="queue" id="queue"><div class="q1"><i></i><span id="qtxt">換聲處理中・約10–20分鐘，可以先往下</span><span id="qpct" style="margin-left:auto">0%</span></div><div class="bar"><b id="qbar"></b></div></div>
+   </div>
+   <button class="btn mint" style="margin-top:16px" data-next>下一顆豆：影片分享 →</button>
+  </div>
+ </section>
+
+ <!-- ===== BEAN 4 影片分享 ===== -->
+ <section class="view" id="v-b4">
+  <div class="topbar"><button class="back" data-back><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F1F1E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+   <div style="display:flex;gap:8px"><button class="chip" data-mypod>我的豆莢</button></div></div>
+  <div class="scroll">
+   <div class="h1" style="margin-top:8px">做成影片，分享出去</div>
+   <div class="sub">放 1–5 張圖，歌詞會自動變字幕。</div>
+   <div class="card">
+    <div class="sec">加上圖片<span class="r" id="imgCnt">3 / 5</span></div>
+    <div class="ths" id="ths"></div>
+    <button class="btn mint" style="margin-top:14px" id="makeVid"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#13261B" stroke-width="2" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 10.5l5-3v9l-5-3z"/></svg>做成影片</button>
+    <div class="render" id="render"><div class="proc" style="justify-content:flex-start;margin-top:0"><span class="spin"></span><span id="rtxt">雲端製作中…</span><span id="rpct" style="margin-left:auto">0%</span></div><div class="bar"><b id="rbar" style="background:var(--mint)"></b></div></div>
+    <div class="prev" id="prev">
+     <div class="v916" id="v916"><span class="wm">豆莢浪歌</span><div class="lyr" id="lyr">隨口唱一首</div><div class="pg"><b id="vpg"></b></div></div>
+     <div style="flex:1;font-size:13px;color:#C9D0CB;line-height:1.7;padding-top:4px"><div style="font-size:16px;color:var(--fg);font-weight:700" data-title>夏天的味道</div>9:16・0:30・字幕已加上<br><span class="tag" style="display:inline-block;margin-top:6px">影片好了 ✓</span>
+      <button class="mini" style="margin-top:12px" id="replay">▶ 再看一次</button></div>
+    </div>
+   </div>
+   <div class="card" id="shareCard">
+    <div class="sec">分享到</div>
+    <div class="share">
+     <button class="sh"><i style="background:#06C755">LINE</i>LINE</button>
+     <button class="sh"><i style="background:radial-gradient(circle at 30% 110%,#FFD776,#F3574F 45%,#C33DA7 70%,#6A4BD8)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="#fff"/></svg></i>Instagram</button>
+     <button class="sh"><i style="background:#111;border:1px solid #333;font-size:22px">@</i>Threads</button>
+     <button class="sh"><i style="background:#1877F2;font-size:24px;font-family:Arial">f</i>Facebook</button>
+     <button class="sh"><i style="background:#111;border:1px solid #333;font-size:18px;font-family:Arial">𝕏</i>X</button>
+     <button class="sh"><i style="background:#FF0033"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="#fff"/></svg></i>YouTube</button>
+     <button class="sh" id="copy"><i style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></i>複製連結</button>
+     <button class="sh" id="openLanding"><i style="background:rgba(185,229,154,.12);border:1px solid rgba(185,229,154,.4);font-size:18px">👀</i>預覽分享頁</button>
+    </div>
+    <div class="note"><span>ⓘ</span><span>第一次分享到 IG / Threads / FB / X / YouTube 會請你連結帳號，只需要一次。</span></div>
+    <div class="credits" id="credits"></div>
+   </div>
+  </div>
+ </section>
+
+ <!-- ===== LANDING (shared link) ===== -->
+ <section class="view" id="v-landing">
+  <div class="land-hero" style="background-image:url(img/cover.jpg)"></div>
+  <div style="position:absolute;top:60px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center;z-index:2">
+   <div style="display:flex;align-items:center;gap:6px"><img src="img/logo-pod.png" style="width:34px;height:34px"><span style="font-family:var(--serif);font-weight:700;font-size:20px;letter-spacing:2px">豆莢浪歌</span></div>
+   <span class="chip" style="font-size:12px">doujia.app/s/8fk2</span></div>
+  <div style="position:absolute;top:350px;left:22px;right:22px;z-index:2">
+   <div style="font-size:13px;color:#D4F0C0">小莢 分享了一首歌</div>
+   <div class="h1" style="font-size:30px;margin-top:4px">夏天的味道</div>
+   <div class="sub">by 小莢 ・ 女聲A つくよみちゃん ・ 抒情伴奏</div>
+   <div class="card" style="display:flex;align-items:center;gap:12px">
+    <button class="pbtn big" data-play="land"><svg width="18" height="18" viewBox="0 0 14 14"><path class="pi" d="M3 1.8v10.4c0 .6.6.9 1.1.6l8.2-5.2c.4-.3.4-.9 0-1.2L4.1 1.2C3.6.9 3 1.2 3 1.8z" fill="#13261B"/></svg></button>
+    <div style="flex:1"><div class="mw" data-mw="land" style="margin:0"></div><div style="font-size:12px;color:var(--mute);margin-top:4px" data-time="land">0:00 / 0:30</div></div></div>
+   <div style="font-size:13px;color:#C9D0CB;margin-top:16px;line-height:1.6">「隨口唱一首，短短幾秒天下行」<br>已經有 <b style="color:var(--fg)">12</b> 個人接著唱這首歌</div>
+   <button class="btn mint" style="margin-top:18px;height:58px" id="contSing">接著唱 →</button>
+   <div style="text-align:center;font-size:12px;color:var(--mute);margin-top:10px">不用註冊，直接開唱</div>
+  </div>
+ </section>
+
+ <!-- tab bar -->
+ <nav class="tabbar" id="tabbar"></nav>
+
+ <!-- 我的豆莢 panel -->
+ <div class="panel" id="panel"><div class="sheet">
+  <div style="display:flex;justify-content:space-between;align-items:center"><div class="h1" style="font-size:22px">我的豆莢</div><button class="back" id="closePanel" style="width:32px;height:32px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F1F1E6" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="card"><div class="sec">換聲狀態</div>
+   <div class="li"><img src="img/av-female.png"><div class="a"><b>夏天的味道・女聲A</b><span id="pStat">處理中，約 15 分鐘</span></div><span class="tag w" id="pTag">處理中</span></div></div>
+  <div class="card"><div class="sec">我的作品<span class="r">3 首</span></div>
+   <div class="li"><img src="img/cover.jpg"><div class="a"><b data-title>夏天的味道</b><span>今天・0:30・▶ 128</span></div><span class="tag">已分享</span></div>
+   <div class="li"><img src="img/th2.jpg"><div class="a"><b>放學的電車</b><span>3 天前・0:22・▶ 54</span></div><span class="tag w">草稿</span></div>
+   <div class="li"><img src="img/th3.jpg"><div class="a"><b>貓咪不睡覺</b><span>上週・0:18・▶ 301</span></div><span class="tag">已分享</span></div></div>
+  <div class="card"><div class="sec">誰接著唱了我的歌</div>
+   <div class="li"><img src="img/av-male.png" style="border-radius:50%"><div class="a"><b>阿哲 接著唱〈夏天的味道〉</b><span>2 小時前・加了一段副歌</span></div><span class="tag">聽聽</span></div>
+   <div class="li"><img src="img/av-toon.png" style="border-radius:50%"><div class="a"><b>moko 接著唱〈貓咪不睡覺〉</b><span>昨天・換成卡通聲</span></div><span class="tag">聽聽</span></div></div>
+ </div></div>
+
+ <div class="toast" id="toast"></div>
+ <div class="homebar"></div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const P=new URLSearchParams(location.hash.slice(1));
+const DEMO=P.has('s'); if(DEMO)document.body.classList.add('demo');
+const S={view:'onboard',bean:0,name:'',rec:false,t:0,recDone:false,voice:'原聲',q:0,imgs:['img/th1.jpg','img/th2.jpg','img/th3.jpg'],tempo:100,done:[false,false,false,false]};
+const ICONS=[
+ '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M5 13a7 7 0 0 1 14 0"/><rect x="3.5" y="12" width="3.5" height="6" rx="1.6" fill="currentColor"/><rect x="17" y="12" width="3.5" height="6" rx="1.6" fill="currentColor"/><rect x="8" y="10" width="8" height="8" rx="3"/><circle cx="10.6" cy="14" r=".9" fill="currentColor"/><circle cx="13.4" cy="14" r=".9" fill="currentColor"/><path d="M10 20.5h4"/></svg>',
+ '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M9 18V6l10-2v12"/><circle cx="6.6" cy="18" r="2.6" fill="currentColor"/><circle cx="16.6" cy="16" r="2.6" fill="currentColor"/></svg>',
+ '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 3l1.6 4.9L16.5 9.5l-4.9 1.6L10 16l-1.6-4.9L3.5 9.5l4.9-1.6z"/><path d="M17.5 13l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/><path d="M17 3l.6 1.6 1.6.6-1.6.6L17 7.4l-.6-1.6-1.6-.6 1.6-.6z"/></svg>',
+ '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 21v-9"/><path d="M12 13c-.6-4-3.5-6-7-5.5.3 4 3 6 7 5.5zM12 11c.6-4.4 3.8-6.8 7.6-6.4-.3 4.4-3.6 6.8-7.6 6.4z"/></svg>'];
+const BEAN='<svg class="bean" viewBox="0 0 46 50"><defs><radialGradient id="bg" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#F6F9CF"/><stop offset=".45" stop-color="#C8EA9E"/><stop offset="1" stop-color="#78C28A"/></radialGradient><filter id="bgl" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter></defs><path d="M24 4c11 0 17 8 16.5 19-.5 9-4 13-9 17s-7 8-13 7S5 41 5 31 9 23 13 15 17 4 24 4z" fill="#D7F2A8" filter="url(#bgl)" opacity=".75"/><path d="M24 4c11 0 17 8 16.5 19-.5 9-4 13-9 17s-7 8-13 7S5 41 5 31 9 23 13 15 17 4 24 4z" fill="url(#bg)"/><path d="M30 2.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" fill="#F6F0C0"/></svg>';
+$('#tabbar').innerHTML=ICONS.map((ic,i)=>`<button class="tab" data-tab="${i}">${BEAN}<span class="ring"><span class="ic" style="width:24px;height:24px">${ic}</span></span><span class="badge"></span></button>`).join('');
+$$('.tab').forEach(b=>b.onclick=()=>go(+b.dataset.tab));
+
+function toast(t,ms=2200){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),ms)}
+function show(id){$$('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+id));S.view=id;$('#tabbar').style.display=(id==='landing')?'none':'flex'}
+function go(i){ if(S.view==='onboard'&&!S.name&&i===0){} S.bean=i; show('b'+(i+1)); syncTabs(); }
+function syncTabs(){$$('.tab').forEach((t,i)=>{t.classList.toggle('on',S.view!=='onboard'?i===S.bean:i===0);t.classList.toggle('done',S.done[i]&&i!==S.bean)})}
+function next(){S.done[S.bean]=true; if(S.bean<3)go(S.bean+1)}
+$$('[data-next]').forEach(b=>b.onclick=next);
+$$('[data-skip]').forEach(b=>b.onclick=()=>{toast('先跳過，之後可以回來補');if(S.bean<3)go(S.bean+1)});
+$$('[data-back]').forEach(b=>b.onclick=()=>{S.bean>0?go(S.bean-1):show('onboard'),syncTabs()});
+$$('[data-mypod]').forEach(b=>b.onclick=()=>$('#panel').classList.add('on'));
+$('#closePanel').onclick=()=>$('#panel').classList.remove('on');
+$('#panel').onclick=e=>{if(e.target.id==='panel')$('#panel').classList.remove('on')};
+
+/* ---- onboarding ---- */
+const slides=[{full:'img/hero-strip.jpg'},{p:1,c:'邊走邊唱'},{p:2,c:'彈著吉他'},{p:3,c:'通勤路上'},{p:4,c:'下廚也唱'}];
+$('#hero').innerHTML=slides.map((s,i)=>s.full?`<div class="slide"><img class="full" src="${s.full}"></div>`:
+ `<div class="slide"><div class="bgb" style="background-image:url(img/p${s.p}-bg.jpg)"></div><img class="pp" src="img/p${s.p}.png"><span class="cap">${s.c}</span></div>`).join('');
+$('#dots').innerHTML=slides.map(()=>'<i></i>').join('');
+let si=0; function slide(i){si=i%slides.length;$$('.slide').forEach((e,k)=>e.classList.toggle('on',k===si));$$('#dots i').forEach((e,k)=>e.classList.toggle('on',k===si))}
+slide(+(P.get('slide')||0)); if(!DEMO) setInterval(()=>slide(si+1),3500);
+$$('#dots i').forEach((d,k)=>d.onclick=()=>slide(k));
+$('#name').oninput=e=>{$('#cnt').textContent=e.target.value.length+'/20'};
+$('#startBtn').onclick=()=>{S.name=$('#name').value.trim()||'你';$$('[data-uname]').forEach(e=>e.textContent=S.name);toast(`嗨，${S.name}！開始唱吧`);go(0)};
+
+/* ---- bean1 recording ---- */
+$('#wm').innerHTML=[8,14,22,12,26,16,10,20,8].map(h=>`<i style="height:${h}px"></i>`).join('');
+const NB=44; $('#wave').innerHTML=Array.from({length:NB},()=>'<i></i>').join('');
+const bars=$$('#wave i');
+function colorAt(k){const t=k/(NB-1);const c=t<.5?[ (150+t*2*90)|0,(205+t*2*25)|0,(140-t*2*10)|0]:[ 240,(230-(t-.5)*2*15)|0,(130+(t-.5)*2*20)|0];return `rgb(${c})`}
+function drawWave(level,tt){bars.forEach((b,k)=>{const played=k<NB*(S.rec?Math.min(1,S.t/30)+.25:.8)||!S.rec;const env=Math.sin(k/NB*Math.PI)*.6+.4;
+ const h=S.rec||level?6+Math.abs(Math.sin(k*.9+tt*6)+Math.sin(k*.37+tt*3.3))*31*env*(level||1):6+Math.abs(Math.sin(k*.6))*6;
+ b.style.height=h.toFixed(1)+'px';b.style.background=(k>NB*.85&&!S.rec)?'rgba(220,230,224,.3)':colorAt(k)})}
+function fmt(t){t=Math.floor(t);return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0')}
+let raf,t0;
+function loop(ts){if(!S.rec)return;S.t=(performance.now()-t0)/1000;$('#timer').innerHTML=fmt(S.t)+' <span>/ 00:30</span>';drawWave(1,S.t);if(S.t>=30)stopRec();else raf=requestAnimationFrame(loop)}
+function startRec(){S.rec=true;t0=performance.now()-S.t*1000;$('#mic').classList.add('rec');$('#micIc').innerHTML='<rect x="7" y="7" width="10" height="10" rx="2.5" fill="#B4402E" stroke="none"/>';
+ $('#b1t').textContent='正在聽你唱…';$('#b1s').textContent='再按一次就停止';$('#upl').classList.add('hidden');raf=requestAnimationFrame(loop)}
+function stopRec(){S.rec=false;cancelAnimationFrame(raf);$('#mic').classList.remove('rec');$('#micIc').innerHTML='<rect x="9" y="2.5" width="6" height="12" rx="3" fill="#141A16"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>';
+ $('#b1rec').classList.add('hidden');$('#b1proc').classList.remove('hidden');$('#b1t').textContent='收到了！';$('#b1s').textContent='整理一下你的聲音';
+ setTimeout(recFinished,1600)}
+function recFinished(){$('#v-b1').classList.add('isdone');$('#b1proc').classList.add('hidden');$('#b1done').classList.remove('hidden');$('#b1t').textContent='錄好了，聽聽看';$('#b1s').textContent=`${Math.max(3,Math.round(S.t))} 秒・已自動降噪`;S.recDone=true;S.done[0]=true;syncTabs()}
+function resetRec(){$('#v-b1').classList.remove('isdone');S.t=0;S.recDone=false;$('#b1done').classList.add('hidden');$('#b1rec').classList.remove('hidden');$('#upl').classList.remove('hidden');$('#timer').innerHTML='00:00 <span>/ 00:30</span>';$('#b1t').textContent='現在就唱一段吧';$('#b1s').textContent='無論是哼、唱、說話，都可以';drawWave(0,0)}
+$('#micBtn').onclick=()=>{if(S.recDone)return;S.rec?stopRec():startRec()};
+$('#redo').onclick=resetRec;
+$('#upl button').onclick=()=>{toast('已選取：voice_memo.m4a');S.t=14;stopRec()};
+drawWave(0,0);
+
+/* ---- mini waveforms + fake playback (WebAudio melody) ---- */
+function mw(el,n){el.innerHTML=Array.from({length:n},(_,i)=>`<i style="height:${(4+Math.abs(Math.sin(i*.7)+Math.sin(i*.23))*9).toFixed(1)}px"></i>`).join('')}
+$$('[data-mw]').forEach(e=>mw(e,e.dataset.mw==='mix'?40:44)); mw($('#recMw'),40);
+const MEL=[64,64,66,69,69,67,64,62,62,64,67,71,72,71,67,66,64,60,62,64];
+let ac,playing=null,pt0,praf;
+function playMel(key,btn){
+ if(playing){stopPlay();if(playing===key)return}
+ playing=key;pt0=performance.now();setIcon(btn,true);
+ try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const piano=$('#melSeg button.on').textContent==='鋼琴版';const sp=.32*100/S.tempo;
+  MEL.forEach((m,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=piano?'triangle':'sine';o.frequency.value=440*Math.pow(2,(m-69)/12)*(S.voice==='原聲'?1:1.5);
+   const st=ac.currentTime+i*sp;g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(.18,st+.02);g.gain.exponentialRampToValueAtTime(.001,st+sp*(piano?2.2:.95));o.connect(g).connect(ac.destination);o.start(st);o.stop(st+sp*2.4)})}catch(e){}
+ const tick=()=>{const t=(performance.now()-pt0)/1000;const f=Math.min(1,t/6.4);
+  $$(`[data-mw="${key}"] i, ${key==='rec'?'#recMw i':''}`.replace(/, $/,'')).forEach((b,i,a)=>b.classList.toggle('p',i<a.length*f));
+  const tm=$(`[data-time="${key}"]`); if(tm)tm.textContent=`0:${String(Math.floor(t)).padStart(2,'0')} / 0:30`;
+  if(f<1)praf=requestAnimationFrame(tick);else stopPlay()};tick()}
+function stopPlay(){cancelAnimationFrame(praf);$$('[data-play]').forEach(b=>setIcon(b,false));const k=playing;playing=null;return k}
+function setIcon(btn,on){const p=btn.querySelector('.pi');if(p)p.setAttribute('d',on?'M3.5 2h2.5v10H3.5zM8 2h2.5v10H8z':'M3 1.8v10.4c0 .6.6.9 1.1.6l8.2-5.2c.4-.3.4-.9 0-1.2L4.1 1.2C3.6.9 3 1.2 3 1.8z')}
+$$('[data-play]').forEach(b=>b.onclick=()=>{const k=b.dataset.play;if(playing===k){stopPlay();return}playMel(k,b)});
+
+/* ---- bean2 ---- */
+$$('#melSeg button').forEach(b=>b.onclick=()=>{$$('#melSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');toast(b.textContent==='鋼琴版'?'換成 Salamander 鋼琴音色':'回到你的原聲')});
+$('#asr').onclick=()=>{const ta=$('#lyrics');ta.value='';toast('辨識中…');setTimeout(()=>{ta.value='隨口唱一首\n短短幾秒天下行\n夏天的風吹過來\n我把它唱成歌';toast('辨識好了，記得檢查一下錯字');syncLyr()},1200)};
+$('#nolyr').onclick=()=>{$('#lyrics').value='';toast('好的，影片不放字幕');next()};
+$('#title').oninput=e=>{$$('[data-title]').forEach(x=>x.textContent=e.target.value||'未命名')};
+$$('[data-tempo]').forEach(b=>b.onclick=()=>{S.tempo=Math.max(70,Math.min(130,S.tempo+ +b.dataset.tempo*5));$('#tempo').textContent=S.tempo+'%'});
+$('#dl').onclick=()=>toast('旋律檔已下載：夏天的味道.mid');
+$('#lyrics').oninput=syncLyr;
+function lyrLines(){const l=$('#lyrics').value.split('\n').map(s=>s.trim()).filter(Boolean);return l.length?l:['隨口唱一首','短短幾秒天下行']}
+function syncLyr(){$('#lyr').textContent=lyrLines()[0]}
+
+/* ---- bean3 ---- */
+$$('#acc .ac').forEach(b=>b.onclick=()=>{$$('#acc .ac').forEach(x=>x.classList.remove('on'));b.classList.add('on');credits()});
+let qTimer;
+$$('#avs .av').forEach(b=>b.onclick=()=>{if(b.classList.contains('soon'))return;$$('#avs .av').forEach(x=>x.classList.remove('on'));b.classList.add('on');S.voice=b.dataset.v;credits();
+ clearInterval(qTimer);const q=$('#queue');if(S.voice==='原聲'){q.classList.remove('on');return}
+ S.q=0;q.className='queue on';$('#qtxt').textContent='換聲處理中・約10–20分鐘，可以先往下';$('#pTag').textContent='處理中';$('#pTag').className='tag w';$('#pStat').textContent='處理中，約 15 分鐘';
+ qTimer=setInterval(()=>{S.q=Math.min(100,S.q+ (DEMO?0:2.5));$('#qbar').style.width=S.q+'%';$('#qpct').textContent=Math.floor(S.q)+'%';
+  if(S.q>=100){clearInterval(qTimer);q.classList.add('ok');$('#qtxt').textContent=`${S.voice} 好了！可以試聽`;$('#pTag').textContent='好了';$('#pTag').className='tag';$('#pStat').textContent='換聲完成・點一下試聽';$('#podDot').classList.remove('hidden');$$('.tab .badge')[2].style.display='block';toast(`換聲好了：${S.voice}`)}},600)});
+
+/* ---- bean4 ---- */
+const POOL=['img/th1.jpg','img/th2.jpg','img/th3.jpg','img/cover.jpg','img/p2-bg.jpg'];
+function renderThs(){$('#ths').innerHTML=S.imgs.map((u,i)=>`<div class="th" style="background-image:url(${u})"><button class="x" data-rm="${i}">×</button></div>`).join('')+(S.imgs.length<5?'<button class="add" id="addImg">+</button>':'');
+ $('#imgCnt').textContent=S.imgs.length+' / 5';$$('[data-rm]').forEach(b=>b.onclick=()=>{if(S.imgs.length<=1){toast('至少要 1 張圖');return}S.imgs.splice(+b.dataset.rm,1);renderThs()});
+ const a=$('#addImg');if(a)a.onclick=()=>{S.imgs.push(POOL.find(p=>!S.imgs.includes(p))||POOL[0]);renderThs()}}
+renderThs();
+function credits(){const acc=$('#acc .ac.on .n').textContent;$('#credits').innerHTML=`♪ 〈${$('#title').value}〉by ${S.name||'你'} ・ 伴奏：${acc}${S.voice!=='原聲'?` ・ 換聲模型：${S.voice==='女聲A'?'つくよみちゃん（女聲A）':'女聲B'}`:''} ・ 鋼琴音色：Salamander Grand Piano ・ 殘響 IR：豆莢 Hall IR ・ 用 豆莢浪歌 製作`}
+credits();
+let vTimer;
+function buildPreview(){const v=$('#v916');v.querySelectorAll('.fr').forEach(e=>e.remove());S.imgs.forEach((u,i)=>{const d=document.createElement('div');d.className='fr'+(i===0?' on':'');d.style.backgroundImage=`url(${u})`;v.prepend(d)});
+ const L=lyrLines();let k=0;clearInterval(vTimer);$('#lyr').textContent=L[0];$('#vpg').style.width='5%';
+ if(!DEMO)vTimer=setInterval(()=>{k++;const fr=[...v.querySelectorAll('.fr')].reverse();fr.forEach((e,i)=>e.classList.toggle('on',i===k%fr.length));$('#lyr').textContent=L[k%L.length];$('#vpg').style.width=Math.min(100,(k+1)*12)+'%'},2200)}
+function makeVideo(fast){$('#prev').classList.remove('on');$('#render').classList.add('on');$('#makeVid').classList.add('hidden');let p=0;const st=['上傳圖片…','合成伴奏與聲音…','加上字幕…','輸出 9:16 影片…'];
+ const it=setInterval(()=>{p=Math.min(100,p+(fast?100:4));$('#rbar').style.width=p+'%';$('#rpct').textContent=p+'%';$('#rtxt').textContent='雲端製作中・'+st[Math.min(3,Math.floor(p/26))];
+  if(p>=100){clearInterval(it);$('#render').classList.remove('on');$('#prev').classList.add('on');$('#makeVid').classList.remove('hidden');$('#makeVid').lastChild.textContent='重新製作';buildPreview();S.done[3]=true;syncTabs();if(!fast)toast('影片好了！可以分享了')}},120)}
+$('#makeVid').onclick=()=>makeVideo(false);
+$('#replay').onclick=buildPreview;
+$('#copy').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText('https://doujia.app/s/8fk2').catch(()=>{});toast('連結已複製：doujia.app/s/8fk2')};
+$$('.sh').forEach(b=>{if(!b.id)b.onclick=()=>toast(`第一次分享到 ${b.textContent.trim()}：先連結帳號（只需一次）`)});
+$('#openLanding').onclick=()=>show('landing');
+
+/* ---- landing ---- */
+$('#contSing').onclick=()=>{stopPlay();S.name=S.name||'訪客';resetRec();$('#contBanner').classList.remove('hidden');go(0);toast('不用註冊，直接接著唱')};
+
+/* ---- demo states via URL hash (for screenshots) ---- */
+function demo(){
+ const s=P.get('s');if(!s){show('onboard');syncTabs();return}
+ const [v,st]=s.split('-');
+ if(v==='onboard'){show('onboard');syncTabs()}
+ if(v==='b1'){S.name='小莢';go(0);if(st==='rec'){S.rec=true;S.t=12;$('#mic').classList.add('rec');$('#micIc').innerHTML='<rect x="7" y="7" width="10" height="10" rx="2.5" fill="#B4402E" stroke="none"/>';$('#b1t').textContent='正在聽你唱…';$('#b1s').textContent='再按一次就停止';$('#upl').classList.add('hidden');$('#timer').innerHTML='00:12 <span>/ 00:30</span>';drawWave(1,.7)}
+  if(st==='ref'){S.rec=true;S.t=12;$('#timer').innerHTML='00:12 <span>/ 00:30</span>';drawWave(1,.7);$('#upl').classList.add('hidden');$('#hint').classList.add('hidden')}
+  if(st==='done'){S.t=14;recFinished();$('#b1rec').classList.add('hidden')}
+  if(st==='cont'){$('#contBanner').classList.remove('hidden')}}
+ if(v==='b2'){S.done[0]=true;go(1);if(st==='lyr'){$('#lyrics').value='隨口唱一首\n短短幾秒天下行\n夏天的風吹過來';$('details').open=true;$('.scroll',).scrollTop=0;setTimeout(()=>$('#v-b2 .scroll').scrollTop=st==='lyr'?330:0,0)}}
+ if(v==='b3'){S.done[0]=S.done[1]=true;go(2);if(st==='queue'||st==='ok'){$$('#avs .av')[1].click();S.q=st==='ok'?100:35;clearInterval(qTimer);$('#qbar').style.width=S.q+'%';$('#qpct').textContent=S.q+'%';if(st==='ok'){$('#queue').classList.add('ok');$('#qtxt').textContent='女聲A 好了！可以試聽'}}}
+ if(v==='b4'){S.done[0]=S.done[1]=S.done[2]=true;S.voice='女聲A';$$('#avs .av')[1].classList.add('on');$$('#avs .av')[0].classList.remove('on');credits();go(3);
+  if(st==='render'){makeVideo(false);clearInterval;setTimeout(()=>{},0)}
+  if(st==='prev'||st==='share'){makeVideo(true);setTimeout(()=>{if(st==='share')$('#v-b4 .scroll').scrollTop=400},200)}}
+ if(v==='panel'){S.name='小莢';go(2);$('#panel').classList.add('on');if(st==='ok'){$('#pTag').textContent='好了';$('#pTag').className='tag';$('#pStat').textContent='換聲完成・點一下試聽'}}
+ if(v==='landing'){show('landing')}
+}
+demo();
+</script>
+</body>
+</html>

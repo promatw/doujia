@@ -1,0 +1,27 @@
+{
+ "id": "K07-001-000-012",
+ "display": "K07-001-000-012",
+ "song": "K07",
+ "parent": "K07-001",
+ "step": 3,
+ "author": "012",
+ "authorName": "Bob3",
+ "created": "2026-10-11T21:12:00+08:00",
+ "files": {
+  "accompaniment": "accompaniment.mp3",
+  "preview": "preview_mix.mp3"
+ },
+ "notes": "上傳伴奏「極簡鋼琴＋貝斯（v4，跳過豆2）」(68.6s，含前奏)。自動估 2.76s → 試聽微調 +1×0.1s → melody_start=2.86s（實際 2.8179s，誤差 42 ms）。",
+ "credits": [
+  "Bob3：配樂（極簡鋼琴＋貝斯（v4，跳過豆2），使用者上傳）",
+  "Salamander Grand Piano by Alexander Holm (CC BY 3.0)"
+ ],
+ "melody_start": 2.86,
+ "intro": {
+  "mode": "upload",
+  "auto_estimate": 2.76,
+  "nudges": 1,
+  "truth": 2.8179,
+  "unit": "秒；豆1 時間軸要延後多少秒才對上伴奏"
+ }
+}

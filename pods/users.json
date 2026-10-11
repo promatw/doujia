@@ -1,0 +1,45 @@
+{
+ "note": "模擬：正式版放 Firebase；轉移碼只存 hash，這裡也不公開",
+ "users": {
+  "001": {
+   "code": "001",
+   "displayName": "Bob1",
+   "created": "2026-10-11T20:33:00+08:00"
+  },
+  "002": {
+   "code": "002",
+   "displayName": "Bob2",
+   "created": "2026-10-11T20:36:00+08:00"
+  },
+  "003": {
+   "code": "003",
+   "displayName": "HM",
+   "created": "2026-10-11T20:39:00+08:00"
+  },
+  "011": {
+   "code": "011",
+   "displayName": "Amy",
+   "created": "2026-10-11T20:42:00+08:00"
+  },
+  "012": {
+   "code": "012",
+   "displayName": "Bob3",
+   "created": "2026-10-11T20:45:00+08:00"
+  },
+  "014": {
+   "code": "014",
+   "displayName": "Bob4",
+   "created": "2026-10-11T20:48:00+08:00"
+  },
+  "015": {
+   "code": "015",
+   "displayName": "Bob5",
+   "created": "2026-10-11T20:51:00+08:00"
+  },
+  "016": {
+   "code": "016",
+   "displayName": "Bob6",
+   "created": "2026-10-11T20:54:00+08:00"
+  }
+ }
+}

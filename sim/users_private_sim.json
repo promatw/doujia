@@ -1,0 +1,114 @@
+{
+ "001": {
+  "code": "001",
+  "displayName": "Bob1",
+  "nameLocked": true,
+  "devices": [
+   "dev-001-a"
+  ],
+  "created": "2026-10-11T20:33:00+08:00",
+  "transfer": {
+   "codeHash": "1185532fcb1c43853e855afb171d2bfae8f8d6b619247453fd359098671bcb84",
+   "expires": null,
+   "used": false
+  }
+ },
+ "002": {
+  "code": "002",
+  "displayName": "Bob2",
+  "nameLocked": true,
+  "devices": [
+   "dev-002-a"
+  ],
+  "created": "2026-10-11T20:36:00+08:00",
+  "transfer": {
+   "codeHash": "c8f22992a91ab00a957050d218abc486ffba44b24ae0be0d667168c7462a1d27",
+   "expires": null,
+   "used": false
+  }
+ },
+ "003": {
+  "code": "003",
+  "displayName": "HM",
+  "nameLocked": true,
+  "devices": [
+   "dev-003-a"
+  ],
+  "created": "2026-10-11T20:39:00+08:00",
+  "transfer": {
+   "codeHash": "81f704534cc3d2616bb02b66d8ba47f44e8ea23c5d14059632b7ba5efa2e3af0",
+   "expires": null,
+   "used": false
+  }
+ },
+ "011": {
+  "code": "011",
+  "displayName": "Amy",
+  "nameLocked": true,
+  "devices": [
+   "dev-011-a"
+  ],
+  "created": "2026-10-11T20:42:00+08:00",
+  "transfer": {
+   "codeHash": "2cf1fc0c5f8e5bddacb46f6abfa7e7f4c93a59b521f5c5b5708886c8997a5066",
+   "expires": null,
+   "used": false
+  }
+ },
+ "012": {
+  "code": "012",
+  "displayName": "Bob3",
+  "nameLocked": true,
+  "devices": [
+   "dev-012-a"
+  ],
+  "created": "2026-10-11T20:45:00+08:00",
+  "transfer": {
+   "codeHash": "3466b9d03bd1728463658f76a8cafb3cb589f69ee7a3c1015a196d1f00c5723b",
+   "expires": null,
+   "used": false
+  }
+ },
+ "014": {
+  "code": "014",
+  "displayName": "Bob4",
+  "nameLocked": true,
+  "devices": [
+   "dev-014-a"
+  ],
+  "created": "2026-10-11T20:48:00+08:00",
+  "transfer": {
+   "codeHash": "4eff4bec7715e78c2b11749182bde165923df8f45718299af9e1511de793eb44",
+   "expires": null,
+   "used": false
+  }
+ },
+ "015": {
+  "code": "015",
+  "displayName": "Bob5",
+  "nameLocked": true,
+  "devices": [
+   "dev-015-b"
+  ],
+  "created": "2026-10-11T20:51:00+08:00",
+  "transfer": {
+   "codeHash": "ecbdc5011ed5ee6e46984a1a344ab4a75442089060802cbadebb994ccd69bf5e",
+   "expires": null,
+   "used": true
+  }
+ },
+ "016": {
+  "code": "016",
+  "displayName": "Bob6",
+  "nameLocked": true,
+  "devices": [
+   "dev-016-a"
+  ],
+  "created": "2026-10-11T20:54:00+08:00",
+  "transfer": {
+   "codeHash": "f1f68f4bd3c322577f62a357efa078b69e32751cad5c0dd73f581b24292aa54a",
+   "expires": null,
+   "used": false
+  }
+ }
+}

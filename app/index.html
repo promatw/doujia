@@ -328,12 +328,12 @@ button:disabled{opacity:.4}
    <div class="h1" style="margin-top:8px">豆3・上傳你的配樂</div>
    <div class="sub">用你自己做的伴奏（mp3 / wav / m4a）。平台幫你對齊、混音試聽，不會自動生成伴奏。</div>
    <div class="card">
-    <label class="btn" style="height:54px;cursor:pointer">📁 上傳伴奏<input type="file" id="accFile" accept="audio/*,.mp3,.wav,.m4a,.aac" hidden></label>
+    <button class="btn" id="autoIntro" style="height:54px;margin-bottom:8px">🎹 自動伴奏＋前奏（第一個和弦一小節，起點精確）</button><label class="btn" style="height:54px;cursor:pointer">📁 上傳伴奏（可含前奏）<input type="file" id="accFile" accept="audio/*,.mp3,.wav,.m4a,.aac" hidden></label>
     <div id="accInfo" style="font-size:14px;color:#C9D0CB;margin-top:8px">還沒有伴奏</div>
    </div>
    <div class="card" id="accCtl" style="opacity:.45;pointer-events:none">
     <div class="sec">對齊</div>
-    <div style="font-size:15px">人聲放在伴奏的第 <b id="offV" style="font-size:20px;color:var(--mint)">0.00</b> 秒開始</div>
+    <div style="font-size:15px">旋律起點 melody_start：人聲延後 <b id="offV" style="font-size:20px;color:var(--mint)">0.00</b> 秒<br><span style="font-size:13px;color:var(--mute)" id="offSrc">伴奏有前奏時，按 ±1／±0.1 試聽對準；存進 pod.json，下一手沿用、不再重猜</span></div>
     <div class="row" style="gap:8px;margin:10px 0;flex-wrap:wrap"><button class="bigbtn" data-off="-1">−1 秒</button><button class="bigbtn" data-off="-0.1">−0.1</button><button class="bigbtn" data-off="0.1">+0.1</button><button class="bigbtn" data-off="1">+1 秒</button><button class="mini" id="autoOff">自動對齊</button></div>
     <div class="sec" style="margin-top:6px">試聽混音</div>
     <div class="song"><div style="flex:1;min-width:0"><div class="pl" style="margin-top:4px"><button class="pbtn big" data-play="mix"><svg width="18" height="18" viewBox="0 0 14 14"><path class="pi" d="M3 1.8v10.4c0 .6.6.9 1.1.6l8.2-5.2c.4-.3.4-.9 0-1.2L4.1 1.2C3.6.9 3 1.2 3 1.8z" fill="#13261B"/></svg></button><div style="flex:1;margin-left:10px"><div class="mw" data-mw="mix" style="margin:0"></div><span data-time="mix" style="font-size:12px;color:var(--mute)">0:00</span></div></div></div></div>
@@ -468,7 +468,10 @@ $('#dots').innerHTML=slides.map(()=>'<i></i>').join('');
 let si=0;function slide(i){si=i%slides.length;$$('.slide').forEach((e,k)=>e.classList.toggle('on',k===si));$$('#dots i').forEach((e,k)=>e.classList.toggle('on',k===si))}
 slide(0);setInterval(()=>slide(si+1),3500);$$('#dots i').forEach((d,k)=>d.onclick=()=>slide(k));
 $('#name').oninput=e=>{$('#cnt').textContent=e.target.value.length+'/20'};
-$('#startBtn').onclick=()=>{S.name=$('#name').value.trim()||'你';$$('[data-uname]').forEach(e=>e.textContent=S.name);toast(`嗨，${S.name}！開始唱吧`);go(0)};
+/* ---- user: no registration; device gets a code, display name chosen once (immutable). Sim: localStorage; real: Firebase users/{code} ---- */
+const ME=(()=>{let u=null;try{u=JSON.parse(localStorage.getItem('doujia.user')||'null')}catch(e){}if(!u){u={code:'9'+String(Math.floor(Math.random()*100)).padStart(2,'0'),name:null,sim:true};localStorage.setItem('doujia.user',JSON.stringify(u))}return u})();
+if(ME.name){$('#name').value=ME.name;$('#name').disabled=true;$('#cnt').textContent='名稱已決定・代碼 '+ME.code}
+$('#startBtn').onclick=()=>{if(!ME.name){const n=$('#name').value.trim();if(n){ME.name=n;localStorage.setItem('doujia.user',JSON.stringify(ME));toast(`名稱「${n}」已決定（之後不能改）・你的代碼 ${ME.code}`)}}S.name=ME.name||'你';$$('[data-uname]').forEach(e=>e.textContent=S.name);toast(`嗨，${S.name}！開始唱吧`);go(0)};
 
 /* ---- workers (v60 + denoise run off the main thread) ---- */
 function work(msg,transfer,onP){return new Promise((res,rej)=>{const w=new Worker('worker.js');w.onmessage=e=>{if(e.data.p!=null){onP&&onP(e.data.p);return}w.terminate();e.data.err?rej(new Error(e.data.err)):res(e.data)};w.onerror=e=>{w.terminate();rej(new Error(e.message||'worker error'))};w.postMessage(msg,transfer)})}
@@ -584,12 +587,22 @@ $('#dlLrc').onclick=()=>{if(!S.align.length){toast('先對齊歌詞');return}dlB
 
 /* ---- 豆3: accompaniment upload + alignment ---- */
 $('#accFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;$('#accInfo').textContent='讀取中…';
- try{S.acc=await decode(await f.arrayBuffer());S.accName=f.name;$('#accInfo').textContent=`🎵 ${f.name}・${S.acc.duration.toFixed(1)} 秒`;$('#accCtl').style.opacity=1;$('#accCtl').style.pointerEvents='auto';S.done[2]=true;await autoOff();syncTabs();credits()}catch(err){$('#accInfo').textContent='讀不了這個檔案：'+err.message}};
+ try{S.acc=await decode(await f.arrayBuffer());S.accName=f.name;S.introMode='upload';$('#accInfo').textContent=`🎵 ${f.name}・${S.acc.duration.toFixed(1)} 秒`;$('#accCtl').style.opacity=1;$('#accCtl').style.pointerEvents='auto';S.done[2]=true;await autoOff();syncTabs();credits()}catch(err){$('#accInfo').textContent='讀不了這個檔案：'+err.message}};
 async function autoOff(){if(!S.acc)return;if(!S.notes){S.offset=0;showOff();toast('沒有旋律可對齊，請手動調整');return}
  const y=await resample(S.acc,22050);S.offset=ALIGN.estimateOffset(y,22050,S.notes);showOff();toast(`自動對齊：人聲延後 ${S.offset.toFixed(2)} 秒，請試聽確認`)}
 function showOff(){$('#offV').textContent=S.offset.toFixed(2)}
 $('#autoOff').onclick=autoOff;
-$$('[data-off]').forEach(b=>b.onclick=()=>{S.offset=Math.round((S.offset+ +b.dataset.off)*100)/100;showOff();if(playing==='mix'){stopAll();$('[data-play="mix"]').click()}});
+/* mode (a): generated accompaniment + one 92-BPM bar intro of the first chord ending exactly on the first note -> melody_start known exactly */
+async function renderAuto(){const r=ACC.arrange(S.notes),bar=4*60/ACC.BPM,first=S.notes[0].start,ms=Math.max(0,bar-first),I=first+ms-bar;
+ const NM=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'],fc=r.prog[0],rt=NM.indexOf(fc.root),mi=fc.name.endsWith('m'),pcs=[rt,(rt+(mi?3:4))%12,(rt+7)%12],tones=[];for(let p=46;p<62;p++)if(pcs.includes(p%12))tones.push(p);
+ const ev=r.acc.map(a=>({p:a.pitch,s:a.start+ms,e:a.end+ms,v:a.vel/127})),beat=60/ACC.BPM;ev.push({p:34+((rt-10)%12+12)%12,s:I,e:I+bar,v:.5});[0,2,1,3,2,1,3,2].forEach((k,j)=>ev.push({p:tones[k%tones.length],s:I+j*beat/2,e:I+bar,v:j?.35:.45}));
+ const D=Math.max(...ev.map(x=>x.e))+2,sr=44100,ctx=new OfflineAudioContext(1,Math.ceil(D*sr),sr);
+ for(const x of ev){const f=440*Math.pow(2,(x.p-69)/12),o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain();o.type='triangle';o.frequency.value=f;o2.type='sine';o2.frequency.value=2*f;o.connect(g);o2.connect(g);g.connect(ctx.destination);
+  const a=x.v*.25;g.gain.setValueAtTime(0,x.s);g.gain.linearRampToValueAtTime(a,x.s+.01);g.gain.exponentialRampToValueAtTime(a*.25,x.s+Math.min(1.2,x.e-x.s+.01));g.gain.exponentialRampToValueAtTime(1e-4,x.e+.4);o.start(x.s);o2.start(x.s);o.stop(x.e+.5);o2.stop(x.e+.5)}
+ return {buf:await ctx.startRendering(),ms,I,bar,chord:fc.name}}
+$('#autoIntro').onclick=async()=>{if(!S.notes){toast('要先有旋律（豆1）');return}const r=await renderAuto();S.acc=r.buf;S.accName='自動伴奏';S.introMode='auto';S.offset=Math.round(r.ms*1000)/1000;showOff();
+ $('#offSrc').textContent=`自動前奏：${r.chord} 一小節（${r.I.toFixed(2)}→${(r.I+r.bar).toFixed(2)} 秒），melody_start 精確 = ${r.ms.toFixed(3)} 秒`;$('#accInfo').textContent=`🎹 自動伴奏・${S.acc.duration.toFixed(1)} 秒`;$('#accCtl').style.opacity=1;$('#accCtl').style.pointerEvents='auto';S.done[2]=true;syncTabs();credits()};
+$$('[data-off]').forEach(b=>b.onclick=()=>{S.offset=Math.round((S.offset+ +b.dataset.off)*100)/100;S.introMode='upload';showOff();if(playing==='mix'){stopAll();$('[data-play="mix"]').click()}});
 $$('#avs .av').forEach(b=>b.onclick=()=>{if(b.classList.contains('soon'))toast('換聲服務即將推出，目前只能用原聲')});
 
 /* ---- 豆4: images, re-sing, video ---- */
@@ -632,7 +645,7 @@ function creditList(){const c=[`♪〈${$('#title').value}〉`];c.push(`豆1 唱
  c.push('旋律轉譜：v60 哼唱轉 MIDI（pYIN）','鋼琴音色：Salamander Grand Piano by Alexander Holm（CC BY 3.0）','殘響 IR：OpenAIR Library, St Patrick\'s Church Patrington（University of York, CC BY 4.0）','用 豆莢浪歌 製作');return c}
 function credits(){$('#credits').innerHTML=creditList().join(' ・ ')}
 credits();
-$('#publish').onclick=()=>{if(!S.videoBlob){toast('先做成影片');return}const pod={id:(S.pod?S.pod+'-4':'new-4'),parent:S.pod||null,step:4,author:S.name||'訪客',created:new Date().toISOString(),
+$('#publish').onclick=()=>{if(!S.videoBlob){toast('先做成影片');return}const pstep=S.podStep||0,pid=S.pod?S.pod+'-000'.repeat(Math.max(0,3-pstep))+'-'+ME.code:'K??-'+ME.code+'-000-000-'+ME.code;const pod={id:pid,display:pid.replace(/n(\d+)/g,'#$1'),note:'正式版由伺服器配發（同人同步驟第二版會變成 #2）',parent:S.pod||null,step:4,author:ME.code,authorName:S.name||'訪客',melody_start:S.offset,intro:{mode:S.introMode||'upload'},created:new Date().toISOString(),
  files:{video:'video.'+S.videoExt},notes:'由網頁發布（模擬）',credits:creditList(),lyrics:S.align,offset:S.offset,noLyrics:S.noLyrics};
  dlBlob(new Blob([JSON.stringify(pod,null,2)],{type:'application/json'}),'pod.json');dlBlob(S.videoBlob,'video.'+S.videoExt);toast('已產生 pod.json 和影片（模擬發布）')};
 $('#openLanding')&&($('#openLanding').onclick=()=>show('landing'));
@@ -641,15 +654,15 @@ $('#contSing').onclick=()=>{stopAll();S.name=S.name||'訪客';resetRec();$('#con
 /* ---- take over a pod from the tree: #pod=<path> ---- */
 async function loadPod(id){const chain=[];let cur=id;
  while(cur){const r=await fetch(`../pods/${cur}/pod.json`);if(!r.ok)throw new Error('找不到豆莢 '+cur);const p=await r.json();chain.unshift(p);cur=p.parent}
- S.pod=id;S.name=S.name||'訪客';
+ S.pod=id;S.podStep=chain[chain.length-1].step;S.name=S.name||ME.name||'訪客';
  for(const p of chain){const base=`../pods/${p.id}/`,f=p.files||{};
   if(p.step===1){if(f.notes)setNotes(await (await fetch(base+f.notes)).json(),true);const au=f.denoised||f.audio;if(au){S.raw=await decode(await (await fetch(base+au)).arrayBuffer());S.useDn=false}S.done[0]=true;S.noLyrics=!!p.noLyrics;$('#b1nolyr').checked=S.noLyrics;$('#b1t').textContent='接手的旋律';recFinished()}
-  if(p.step===2&&f.aligned){S.align=await (await fetch(base+f.aligned)).json();$('#lyrics').value=S.align.map(a=>a.text).join('\n');renderAlign();S.done[1]=true;S.lyricist=p.author}
-  if(p.step===3&&f.accompaniment){S.acc=await decode(await (await fetch(base+f.accompaniment)).arrayBuffer());S.accName=f.accompaniment;S.accBy=p.author;S.offset=(p.align&&p.align.offset)||0;showOff();$('#accInfo').textContent=`🎵 ${p.author} 的伴奏・${S.acc.duration.toFixed(1)} 秒`;$('#accCtl').style.opacity=1;$('#accCtl').style.pointerEvents='auto';S.done[2]=true}
+  if(p.step===2&&f.aligned){S.align=await (await fetch(base+f.aligned)).json();$('#lyrics').value=S.align.map(a=>a.text).join('\n');renderAlign();S.done[1]=true;S.lyricist=p.authorName||p.author}
+  if(p.step===3&&f.accompaniment){S.acc=await decode(await (await fetch(base+f.accompaniment)).arrayBuffer());S.accName=f.accompaniment;S.accBy=p.authorName||p.author;S.offset=p.melody_start??((p.align&&p.align.offset)||0);S.introMode=(p.intro||{}).mode;showOff();$('#offSrc').textContent=`沿用 ${p.display||p.id} 存的 melody_start（${(p.intro||{}).mode==='auto'?'自動前奏，精確':'上傳者試聽微調'}），不重猜`;$('#accInfo').textContent=`🎵 ${p.authorName||p.author} 的伴奏・${S.acc.duration.toFixed(1)} 秒`;$('#accCtl').style.opacity=1;$('#accCtl').style.pointerEvents='auto';S.done[2]=true}
   if(p.title)$('#title').value=p.title}
  $$('[data-title]').forEach(x=>x.textContent=$('#title').value);
- $$('[data-podban]').forEach(b=>{b.classList.remove('hidden');b.textContent=`接手豆莢 ${id}（${chain.map(p=>p.author).join(' → ')}）・不用同意，直接接`});
- const nxt=[0,1,2,3].find(i=>!S.done[i]&&!(i===1&&S.noLyrics));go(nxt==null?3:nxt);syncTabs();toast(`已接手 ${id}`)}
+ $$('[data-podban]').forEach(b=>{b.classList.remove('hidden');b.textContent=`接手豆莢 ${chain[chain.length-1].display||id}（${chain.map(p=>(p.authorName||p.author)+(p.author&&p.authorName?'・'+p.author:'')).join(' → ')}）・不用同意，直接接`});
+ const nxt=[0,1,2,3].find(i=>!S.done[i]&&!(i===1&&S.noLyrics));go(nxt==null?3:nxt);syncTabs();toast(`已接手 ${chain[chain.length-1].display||id}`)}
 addEventListener('hashchange',()=>location.reload());
 if(HP.get('pod'))loadPod(HP.get('pod')).catch(e=>{toast(e.message);show('onboard')});else{show('onboard');syncTabs()}
 </script>

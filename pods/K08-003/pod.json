@@ -1,0 +1,22 @@
+{
+ "id": "K08-003",
+ "display": "K08-003",
+ "song": "K08",
+ "parent": null,
+ "step": 1,
+ "author": "003",
+ "authorName": "HM",
+ "created": "2026-10-11T21:27:00+08:00",
+ "files": {
+  "audio": "hum.aac",
+  "denoised": "denoised.mp3",
+  "midi": "melody.mid",
+  "notes": "notes.json"
+ },
+ "notes": "哼唱 55.9 秒；降噪；v60 轉出 135 個音。",
+ "credits": [
+  "HM：哼唱",
+  "旋律轉譜：v60 哼唱轉 MIDI（pYIN）"
+ ],
+ "title": "愛到濃烈"
+}

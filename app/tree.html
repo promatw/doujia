@@ -24,7 +24,7 @@ pre{white-space:pre-wrap;background:#0f1612;padding:10px;border-radius:10px;font
 .x{float:right;background:none;border:0;color:#F1F1E6;font-size:24px;cursor:pointer}
 </style></head><body><main>
 <h1><img src="img/logo-pod.png" alt="">豆莢樹</h1>
-<div class="sub">天涯有浪人，豆莢有浪歌。每個豆莢用「路徑」命名：<b>8</b> → <b>8-2a</b>（豆2 第一個分支）→ <b>8-2a-3a</b> → <b>8-2a-3a-4</b>。點一下看內容、播放，或從那裡接手。<br><a href="index.html">← 回到創作</a>　<a href="../">首頁</a></div>
+<div class="sub">天涯有浪人，豆莢有浪歌。命名：<b>歌曲編號</b>＋每顆豆作者的<b>用戶代碼</b>，例如 <b>K08-003-011-015-015</b>＝K08 這首歌，豆1 是 003、豆2 是 011、豆3 和豆4 都是 015。<b>000</b>＝那顆豆被跳過；同一人在同一步做第二版會加 <b>#2</b>。點一下看內容、播放，或從那裡接手。<br><a href="index.html">← 回到創作</a>　<a href="../">首頁</a></div>
 <div class="legend"><span class="s1">豆1 唱</span><span class="s2">豆2 詞</span><span class="s3">豆3 配樂</span><span class="s4">豆4 成品</span></div>
 <div id="tree">載入中…</div>
 <div id="det"></div>
@@ -35,19 +35,19 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const tz=iso=>{try{return new Date(iso).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false})+'（台北）'}catch(e){return iso}};
 let IDX=[];
 fetch('../pods/index.json',{cache:'no-store'}).then(r=>r.json()).then(j=>{IDX=j.pods;const kids=p=>IDX.filter(x=>x.parent===p).sort((a,b)=>a.id.localeCompare(b.id));
- const li=p=>`<li><button class="node" data-id="${p.id}"><span class="st s${p.step}">豆${p.step}<br>${ST[p.step]}</span><span><span class="id">${esc(p.id)}</span>${p.published?'<span class="pub">已發布</span>':''}<br><span class="who">${esc(p.author)}・${esc((p.notes||'').slice(0,34))}…</span></span></button>${kids(p.id).length?`<ul>${kids(p.id).map(li).join('')}</ul>`:''}</li>`;
- $('#tree').innerHTML=`<ul class="tree">${IDX.filter(p=>!p.parent).map(li).join('')}</ul>`;
+ const li=p=>`<li><button class="node" data-id="${p.id}"><span class="st s${p.step}">豆${p.step}<br>${ST[p.step]}</span><span><span class="id">${esc(p.display||p.id)}</span>${p.published?'<span class="pub">已發布</span>':''}<br><span class="who"><b>${esc(p.authorName||p.author)}</b>（${esc(p.author)}）${p.title?'・〈'+esc(p.title)+'〉':''}・${esc((p.notes||'').slice(0,34))}…</span></span></button>${kids(p.id).length?`<ul>${kids(p.id).map(li).join('')}</ul>`:''}</li>`;
+ $('#tree').innerHTML=IDX.filter(p=>!p.parent).sort((a,b)=>b.id.localeCompare(a.id)).map(r=>`<h3 style="margin:18px 0 4px">${esc(r.song)}〈${esc(r.title||'')}〉</h3><ul class="tree">${li(r)}</ul>`).join('');
  document.querySelectorAll('.node').forEach(b=>b.onclick=()=>open(b.dataset.id));
  const h=location.hash.slice(1);if(h)open(h)}).catch(e=>$('#tree').textContent='讀不到 pods/index.json：'+e.message);
 async function open(id){document.querySelectorAll('.node').forEach(b=>b.classList.toggle('sel',b.dataset.id===id));history.replaceState(null,'','#'+id);
  const base=`../pods/${id}/`,p=await (await fetch(base+'pod.json',{cache:'no-store'})).json(),f=p.files||{};const d=$('#det');d.style.display='block';
- const path=[];let c=p;path.unshift(c.id);let par=p.parent;while(par){path.unshift(par);par=(IDX.find(x=>x.id===par)||{}).parent}
+ const path=[];let c=p;path.unshift(c.display||c.id);let par=p.parent;while(par){const q=IDX.find(x=>x.id===par)||{};path.unshift(q.display||par);par=(IDX.find(x=>x.id===par)||{}).parent}
  let media='';if(f.video)media+=`<video src="${base+f.video}" controls playsinline preload="metadata" ${f.poster?`poster="${base+f.poster}"`:''}></video>`;
  for(const k of ['mix','preview','denoised','accompaniment','audio'])if(f[k])media+=`<div class="kv">${{mix:'成品混音',preview:'試聽混音',denoised:'降噪人聲',accompaniment:'上傳的伴奏',audio:'原始哼唱'}[k]}</div><audio src="${base+f[k]}" controls preload="none"></audio>`;
  let lyr='';if(f.lyrics){try{lyr=`<pre>${esc(await (await fetch(base+f.lyrics)).text())}</pre>`}catch(e){}}
  const links=Object.entries(f).flatMap(([k,v])=>Array.isArray(v)?v:[v]).map(v=>`<a href="${base+v}" download>⬇ ${esc(v)}</a>`).join('')+`<a href="${base}pod.json">pod.json</a>`;
- d.innerHTML=`<button class="x" onclick="this.parentNode.style.display='none'">×</button><h2>${esc(p.id)}・豆${p.step} ${ST[p.step]}</h2>
- <div class="kv">作者：<b>${esc(p.author)}</b>　｜　${tz(p.created)}<br>路徑：${path.map(esc).join(' → ')}<br>${esc(p.notes)}</div>${media}${lyr}
+ d.innerHTML=`<button class="x" onclick="this.parentNode.style.display='none'">×</button><h2>${esc(p.display||p.id)}・豆${p.step} ${ST[p.step]}</h2>
+ <div class="kv">作者：<b>${esc(p.authorName||p.author)}</b>（代碼 ${esc(p.author)}）${p.melody_start!=null?`　｜　melody_start ${p.melody_start} 秒（${(p.intro||{}).mode==='auto'?'自動前奏':(p.intro?'上傳＋試聽微調':'沿用')}）`:''}　｜　${tz(p.created)}<br>路徑：${path.map(esc).join(' → ')}<br>${esc(p.notes)}</div>${media}${lyr}
  <div class="kv" style="margin-top:8px">致謝：${(p.credits||[]).map(esc).join('・')}</div><div class="files">${links}</div>
  ${p.step<4?`<a class="btn" href="index.html#pod=${encodeURIComponent(p.id)}">✋ 從這裡接手（不用同意）</a>`:''}`;
  d.scrollIntoView({behavior:'smooth',block:'nearest'})}

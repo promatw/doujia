@@ -1,0 +1,22 @@
+{
+ "id": "K07-001",
+ "display": "K07-001",
+ "song": "K07",
+ "parent": null,
+ "step": 1,
+ "author": "001",
+ "authorName": "Bob1",
+ "created": "2026-10-11T20:57:00+08:00",
+ "files": {
+  "audio": "hum.aac",
+  "denoised": "denoised.mp3",
+  "midi": "melody.mid",
+  "notes": "notes.json"
+ },
+ "notes": "哼唱 55.9 秒；降噪；v60 轉出 135 個音。",
+ "credits": [
+  "Bob1：哼唱",
+  "旋律轉譜：v60 哼唱轉 MIDI（pYIN）"
+ ],
+ "title": "月台"
+}

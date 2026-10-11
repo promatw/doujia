@@ -1,0 +1,20 @@
+{
+ "id": "K07-001-015",
+ "display": "K07-001-015",
+ "song": "K07",
+ "parent": "K07-001",
+ "step": 2,
+ "author": "015",
+ "authorName": "Bob5",
+ "created": "2026-10-11T21:24:00+08:00",
+ "files": {
+  "lyrics": "lyrics.txt",
+  "aligned": "aligned.json",
+  "lrc": "lyrics.lrc"
+ },
+ "notes": "4 行歌詞 ↔ 13 句旋律",
+ "credits": [
+  "Bob5：作詞"
+ ],
+ "title": "月台"
+}

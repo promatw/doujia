@@ -1,0 +1,38 @@
+{
+ "id": "K07-001-002-012-014",
+ "display": "K07-001-002-012-014",
+ "song": "K07",
+ "parent": "K07-001-002-012",
+ "step": 4,
+ "author": "014",
+ "authorName": "Bob4",
+ "created": "2026-10-11T21:09:00+08:00",
+ "files": {
+  "mix": "final_mix.mp3",
+  "video": "video.mp4",
+  "subtitles": "subtitles.ass",
+  "poster": "poster.jpg",
+  "images": [
+   "images/th1.jpg",
+   "images/th2.jpg",
+   "images/th3.jpg",
+   "images/cover.jpg",
+   "images/p2-bg.jpg"
+  ]
+ },
+ "notes": "用 K07-001-002-012 的伴奏，melody_start=2.86s（沿用豆3，不重估）；原唱＋伴奏＋OpenAIR 殘響，−14 LUFS；720×1280 H.264/AAC 68.6s，13 行字幕。接力：豆1 Bob1・豆2 Bob2・豆3 Bob3・豆4 Bob4",
+ "credits": [
+  "Bob1：哼唱",
+  "Bob2：作詞",
+  "Bob3：配樂（極簡鋼琴＋貝斯（v4），使用者上傳）",
+  "Salamander Grand Piano by Alexander Holm (CC BY 3.0)",
+  "旋律轉譜：v60 哼唱轉 MIDI（pYIN）",
+  "Bob4：成品",
+  "Impulse response: OpenAIR Library (openair.hosted.york.ac.uk), St Patrick's Church Patrington, CC BY 4.0",
+  "圖片：豆莢浪歌 UX 素材",
+  "用 豆莢浪歌 製作"
+ ],
+ "published": true,
+ "title": "月台",
+ "melody_start": 2.86
+}

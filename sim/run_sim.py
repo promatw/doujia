@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# LEGACY (舊命名 8-2a…)：已由 run_sim_v2.py 取代；執行會覆蓋 pods/，請勿再用。
+import sys; sys.exit("legacy: use sim/run_sim_v2.py") if __name__=="__main__" and "--force" not in sys.argv else None
 """豆莢浪歌 relay simulation: Bob1..Bob6 create pods under ../pods/<path>/ (pod.json + files) and pods/index.json."""
 import os, json, shutil, subprocess, threading, time, datetime, errno
 import pretty_midi as pm

@@ -1,0 +1,29 @@
+{
+ "id": "K08-003-011-003",
+ "display": "K08-003-011-003",
+ "song": "K08",
+ "parent": "K08-003-011",
+ "step": 3,
+ "author": "003",
+ "authorName": "HM",
+ "created": "2026-10-11T21:48:00+08:00",
+ "files": {
+  "accompaniment": "accompaniment.mp3",
+  "midi": "accompaniment.mid",
+  "preview": "preview_mix.mp3"
+ },
+ "notes": "自動伴奏（Bbm）＋自動前奏：第一個和弦 Bbm 一小節（92 BPM = 2.609s），在 0.116s 開始、剛好結束在第一個音 → melody_start=0.000s（精確，不用猜）。",
+ "credits": [
+  "HM：配樂（自動伴奏）",
+  "Salamander Grand Piano by Alexander Holm (CC BY 3.0)",
+  "GM 音色：FluidR3_GM"
+ ],
+ "melody_start": 0,
+ "intro": {
+  "mode": "auto",
+  "bar_sec": 2.6087,
+  "intro_start": 0.1156,
+  "first_chord": "Bbm",
+  "bpm": 92
+ }
+}

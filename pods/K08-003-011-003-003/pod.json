@@ -1,0 +1,39 @@
+{
+ "id": "K08-003-011-003-003",
+ "display": "K08-003-011-003-003",
+ "song": "K08",
+ "parent": "K08-003-011-003",
+ "step": 4,
+ "author": "003",
+ "authorName": "HM",
+ "created": "2026-10-11T21:51:00+08:00",
+ "files": {
+  "mix": "final_mix.mp3",
+  "video": "video.mp4",
+  "subtitles": "subtitles.ass",
+  "poster": "poster.jpg",
+  "images": [
+   "images/th1.jpg",
+   "images/th2.jpg",
+   "images/th3.jpg",
+   "images/cover.jpg",
+   "images/p2-bg.jpg"
+  ]
+ },
+ "notes": "用 K08-003-011-003 的伴奏，melody_start=0s（沿用豆3，不重估）；原唱＋伴奏＋OpenAIR 殘響，−14 LUFS；720×1280 H.264/AAC 60.9s，10 行字幕。接力：豆1 HM・豆2 Amy・豆3 HM・豆4 HM",
+ "credits": [
+  "Amy：作詞",
+  "GM 音色：FluidR3_GM",
+  "HM：哼唱",
+  "HM：配樂（自動伴奏）",
+  "Salamander Grand Piano by Alexander Holm (CC BY 3.0)",
+  "旋律轉譜：v60 哼唱轉 MIDI（pYIN）",
+  "HM：成品",
+  "Impulse response: OpenAIR Library (openair.hosted.york.ac.uk), St Patrick's Church Patrington, CC BY 4.0",
+  "圖片：豆莢浪歌 UX 素材",
+  "用 豆莢浪歌 製作"
+ ],
+ "published": true,
+ "title": "愛到濃烈",
+ "melody_start": 0
+}

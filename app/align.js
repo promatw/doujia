@@ -22,8 +22,15 @@ function alignLyrics(lines, notes) { let P = phrases(notes).map(p => ({ ...p }))
     const p = P[k]; if (p.last === p.first) break; const mid = Math.floor((p.first + p.last + 1) / 2);
     P.splice(k, 1, { start: p.start, end: notes[mid - 1].end, first: p.first, last: mid - 1 }, { start: notes[mid].start, end: p.end, first: mid, last: p.last }); }
   return lines.map((text, i) => P[i] ? { text, start: P[i].start, end: P[i].end, notes: P[i].last - P[i].first + 1, chars: [...text.replace(/\s/g, '')].length } : { text, start: null, end: null, notes: 0, chars: text.length }); }
+// lyrics written as a repeated block (e.g. 5 lines ×2): split the melody into sections at the gap nearest the middle, align each section separately
+function isRepeat(lines) { const n = lines.length; if (n < 4 || n % 2) return false; const h = n / 2; for (let i = 0; i < h; i++) if (lines[i] !== lines[i + h]) return false; return true; }
+function alignLyricsSections(lines, notes) { const P = phrases(notes); if (!isRepeat(lines) || P.length < lines.length) return alignLyrics(lines, notes);
+  const h = lines.length / 2, t0 = P[0].start, t1 = P[P.length - 1].end, mid = (t0 + t1) / 2; let k = h, bv = -Infinity;
+  for (let i = h; i <= P.length - h; i++) { const v = (P[i].start - P[i - 1].end) - 2 * Math.abs(P[i].start - mid) / (t1 - t0) * 3; if (v > bv) { bv = v; k = i; } }
+  const cut = P[k].first; const A = alignLyrics(lines.slice(0, h), notes.slice(0, cut)), B = alignLyrics(lines.slice(h), notes.slice(cut));
+  return A.concat(B).map((a, i) => ({ ...a, section: i < h ? 1 : 2 })); }
 function toLRC(al, off = 0) { const f = t => { t += off; const m = Math.floor(t / 60), s = t - 60 * m; return `[${String(m).padStart(2, '0')}:${s.toFixed(2).padStart(5, '0')}]`; };
   return al.filter(a => a.start != null).map(a => f(a.start) + a.text).join('\n') + '\n'; }
-return { phrases, estimateOffset, alignLyrics, toLRC, onsetEnv };
+return { phrases, estimateOffset, alignLyrics, alignLyricsSections, isRepeat, toLRC, onsetEnv };
 })();
 if (typeof module !== 'undefined') module.exports = ALIGN;

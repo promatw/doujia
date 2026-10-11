@@ -1,0 +1,20 @@
+{
+ "id": "K07-001-002",
+ "display": "K07-001-002",
+ "song": "K07",
+ "parent": "K07-001",
+ "step": 2,
+ "author": "002",
+ "authorName": "Bob2",
+ "created": "2026-10-11T21:00:00+08:00",
+ "files": {
+  "lyrics": "lyrics.txt",
+  "aligned": "aligned.json",
+  "lrc": "lyrics.lrc"
+ },
+ "notes": "13 行歌詞 ↔ 13 句旋律",
+ "credits": [
+  "Bob2：作詞"
+ ],
+ "title": "月台"
+}

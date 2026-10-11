@@ -1,0 +1,20 @@
+{
+ "id": "K08-003-011",
+ "display": "K08-003-011",
+ "song": "K08",
+ "parent": "K08-003",
+ "step": 2,
+ "author": "011",
+ "authorName": "Amy",
+ "created": "2026-10-11T21:30:00+08:00",
+ "files": {
+  "lyrics": "lyrics.txt",
+  "aligned": "aligned.json",
+  "lrc": "lyrics.lrc"
+ },
+ "notes": "10 行歌詞 ↔ 13 句旋律（重複段落：分兩段各自對齊）",
+ "credits": [
+  "Amy：作詞"
+ ],
+ "title": "愛到濃烈"
+}

@@ -1,0 +1,18 @@
+{
+ "id": "8-2a",
+ "parent": "8",
+ "step": 2,
+ "author": "Bob2",
+ "created": "2026-10-11T20:14:00+08:00",
+ "files": {
+  "lyrics": "lyrics.txt",
+  "aligned": "aligned.json",
+  "lrc": "lyrics.lrc",
+  "midi": "melody_lyrics.mid"
+ },
+ "notes": "13 行歌詞對到旋律句（行→句）。",
+ "credits": [
+  "Bob2：作詞"
+ ],
+ "title": "月台"
+}

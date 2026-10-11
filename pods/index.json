@@ -1,0 +1,96 @@
+{
+ "generated": "2026-10-11T21:10:00+08:00",
+ "root": "8",
+ "pods": [
+  {
+   "id": "8",
+   "parent": null,
+   "step": 1,
+   "author": "Bob1",
+   "created": "2026-10-11T20:07:00+08:00",
+   "title": "月台",
+   "notes": "哼唱 55.9 秒；降噪（80Hz HP＋頻譜 NR 0.5＋向下擴展器）；v60 轉出 135 個音、13 句。",
+   "published": null
+  },
+  {
+   "id": "8-2a",
+   "parent": "8",
+   "step": 2,
+   "author": "Bob2",
+   "created": "2026-10-11T20:14:00+08:00",
+   "title": "月台",
+   "notes": "13 行歌詞對到旋律句（行→句）。",
+   "published": null
+  },
+  {
+   "id": "8-2b",
+   "parent": "8",
+   "step": 2,
+   "author": "Bob5",
+   "created": "2026-10-11T21:03:00+08:00",
+   "title": "月台",
+   "notes": "4 行歌詞對到旋律句（行→句）。",
+   "published": null
+  },
+  {
+   "id": "8-2c",
+   "parent": "8",
+   "step": 2,
+   "author": "Bob6",
+   "created": "2026-10-11T20:56:00+08:00",
+   "title": "月台",
+   "notes": "6 行歌詞對到旋律句（行→句）。",
+   "published": null
+  },
+  {
+   "id": "8-3a",
+   "parent": "8",
+   "step": 3,
+   "author": "Bob3",
+   "created": "2026-10-11T20:42:00+08:00",
+   "title": null,
+   "notes": "上傳伴奏「極簡鋼琴＋貝斯（v4，跳過豆2）」(68.6s)。自動對齊 2.76s，試聽後手動調成 2.818s（誤差 58 ms）。",
+   "published": null
+  },
+  {
+   "id": "8-2a-3a",
+   "parent": "8-2a",
+   "step": 3,
+   "author": "Bob3",
+   "created": "2026-10-11T20:21:00+08:00",
+   "title": null,
+   "notes": "上傳伴奏「極簡鋼琴＋貝斯（v4）」(68.6s)。自動對齊 2.76s，試聽後手動調成 2.818s（誤差 58 ms）。",
+   "published": null
+  },
+  {
+   "id": "8-2a-3b",
+   "parent": "8-2a",
+   "step": 3,
+   "author": "Bob3",
+   "created": "2026-10-11T20:28:00+08:00",
+   "title": null,
+   "notes": "上傳伴奏「鋼琴＋弦樂（v3）」(70.4s)。自動對齊 1.38s，試聽後手動調成 2.818s（誤差 1438 ms）。",
+   "published": null
+  },
+  {
+   "id": "8-2a-3c",
+   "parent": "8-2a",
+   "step": 3,
+   "author": "Bob2",
+   "created": "2026-10-11T20:49:00+08:00",
+   "title": null,
+   "notes": "上傳伴奏「鋼琴＋弦樂（v3，Bob2 自己配）」(70.4s)。自動對齊 1.38s，試聽後手動調成 2.818s（誤差 1438 ms）。",
+   "published": null
+  },
+  {
+   "id": "8-2a-3a-4",
+   "parent": "8-2a-3a",
+   "step": 4,
+   "author": "Bob4",
+   "created": "2026-10-11T20:35:00+08:00",
+   "title": "月台",
+   "notes": "選 8-2a-3a；原唱（Bob1 降噪人聲）＋伴奏，OpenAIR 殘響，−14 LUFS；720×1280 直式 MP4 68.6s，13 句字幕。接力：Bob1(豆1) → Bob2(豆2) → Bob3(豆3)",
+   "published": true
+  }
+ ]
+}

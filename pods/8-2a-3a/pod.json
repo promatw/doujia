@@ -1,0 +1,21 @@
+{
+ "id": "8-2a-3a",
+ "parent": "8-2a",
+ "step": 3,
+ "author": "Bob3",
+ "created": "2026-10-11T20:21:00+08:00",
+ "files": {
+  "accompaniment": "accompaniment.mp3",
+  "preview": "preview_mix.mp3"
+ },
+ "notes": "上傳伴奏「極簡鋼琴＋貝斯（v4）」(68.6s)。自動對齊 2.76s，試聽後手動調成 2.818s（誤差 58 ms）。",
+ "credits": [
+  "Bob3：配樂（極簡鋼琴＋貝斯（v4），使用者上傳）",
+  "Salamander Grand Piano by Alexander Holm (CC BY 3.0)"
+ ],
+ "align": {
+  "auto": 2.76,
+  "offset": 2.8179,
+  "unit": "秒；人聲在伴奏時間軸上延後的秒數"
+ }
+}

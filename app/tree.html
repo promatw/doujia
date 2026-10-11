@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>豆莢樹・豆莢浪歌</title><link rel="icon" href="img/logo-pod.png">
+<style>
+body{margin:0;background:#121a15;color:#F1F1E6;font-family:"Noto Sans TC","PingFang TC",system-ui,sans-serif;font-size:17px}
+main{max-width:760px;margin:auto;padding:16px 14px 60px}
+h1{font-size:26px;margin:6px 0 2px;display:flex;align-items:center;gap:8px}h1 img{width:36px}
+.sub{color:#A9B5AD;font-size:14.5px;margin-bottom:14px}a{color:#B9E59A}
+.legend{display:flex;flex-wrap:wrap;gap:8px;font-size:13.5px;margin-bottom:12px}.legend span{padding:4px 10px;border-radius:20px}
+ul.tree,ul.tree ul{list-style:none;margin:0;padding-left:26px;position:relative}ul.tree{padding-left:0}
+ul.tree ul::before{content:"";position:absolute;left:11px;top:0;bottom:22px;border-left:2px solid #3c5446}
+ul.tree li{position:relative;margin:8px 0}ul.tree ul>li::before{content:"";position:absolute;left:-15px;top:26px;width:14px;border-top:2px solid #3c5446}
+.node{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;cursor:pointer;border:2px solid transparent;background:#1d2a22;width:100%;box-sizing:border-box;text-align:left;color:inherit;font:inherit}
+.node:hover,.node.sel{border-color:#B9E59A}
+.st{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:15px;color:#13261B;line-height:1.05;text-align:center}
+.s1{background:#B9E59A}.s2{background:#9fd6f0}.s3{background:#f3cf7a}.s4{background:#f2a3b3}
+.id{font-weight:800;font-size:18px;font-family:ui-monospace,Menlo,monospace}.who{color:#C9D0CB;font-size:14px}.pub{background:#f2a3b3;color:#3a1520;border-radius:8px;padding:1px 7px;font-size:12px;margin-left:6px}
+#det{position:fixed;left:0;right:0;bottom:0;max-width:760px;margin:auto;max-height:72vh;overflow:auto;box-shadow:0 -10px 30px rgba(0,0,0,.6);background:#18231c;border:1px solid #33463a;border-radius:16px;padding:14px;display:none;box-sizing:border-box}
+#det h2{margin:0 0 4px;font-size:20px}.kv{font-size:14.5px;color:#C9D0CB;line-height:1.7}
+audio,video{width:100%;margin-top:8px}video{max-height:460px;background:#000;border-radius:10px}
+.files a{display:inline-block;margin:4px 8px 0 0;font-size:14px}
+.btn{display:inline-block;margin-top:10px;padding:12px 18px;border-radius:14px;background:#B9E59A;color:#13261B;font-weight:700;text-decoration:none;font-size:17px}
+pre{white-space:pre-wrap;background:#0f1612;padding:10px;border-radius:10px;font-size:15px;line-height:1.6;max-height:220px;overflow:auto}
+.x{float:right;background:none;border:0;color:#F1F1E6;font-size:24px;cursor:pointer}
+</style></head><body><main>
+<h1><img src="img/logo-pod.png" alt="">豆莢樹</h1>
+<div class="sub">天涯有浪人，豆莢有浪歌。每個豆莢用「路徑」命名：<b>8</b> → <b>8-2a</b>（豆2 第一個分支）→ <b>8-2a-3a</b> → <b>8-2a-3a-4</b>。點一下看內容、播放，或從那裡接手。<br><a href="index.html">← 回到創作</a>　<a href="../">首頁</a></div>
+<div class="legend"><span class="s1">豆1 唱</span><span class="s2">豆2 詞</span><span class="s3">豆3 配樂</span><span class="s4">豆4 成品</span></div>
+<div id="tree">載入中…</div>
+<div id="det"></div>
+</main>
+<script>
+const $=s=>document.querySelector(s);const ST=['','唱','詞','配樂','成品'];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const tz=iso=>{try{return new Date(iso).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false})+'（台北）'}catch(e){return iso}};
+let IDX=[];
+fetch('../pods/index.json',{cache:'no-store'}).then(r=>r.json()).then(j=>{IDX=j.pods;const kids=p=>IDX.filter(x=>x.parent===p).sort((a,b)=>a.id.localeCompare(b.id));
+ const li=p=>`<li><button class="node" data-id="${p.id}"><span class="st s${p.step}">豆${p.step}<br>${ST[p.step]}</span><span><span class="id">${esc(p.id)}</span>${p.published?'<span class="pub">已發布</span>':''}<br><span class="who">${esc(p.author)}・${esc((p.notes||'').slice(0,34))}…</span></span></button>${kids(p.id).length?`<ul>${kids(p.id).map(li).join('')}</ul>`:''}</li>`;
+ $('#tree').innerHTML=`<ul class="tree">${IDX.filter(p=>!p.parent).map(li).join('')}</ul>`;
+ document.querySelectorAll('.node').forEach(b=>b.onclick=()=>open(b.dataset.id));
+ const h=location.hash.slice(1);if(h)open(h)}).catch(e=>$('#tree').textContent='讀不到 pods/index.json：'+e.message);
+async function open(id){document.querySelectorAll('.node').forEach(b=>b.classList.toggle('sel',b.dataset.id===id));history.replaceState(null,'','#'+id);
+ const base=`../pods/${id}/`,p=await (await fetch(base+'pod.json',{cache:'no-store'})).json(),f=p.files||{};const d=$('#det');d.style.display='block';
+ const path=[];let c=p;path.unshift(c.id);let par=p.parent;while(par){path.unshift(par);par=(IDX.find(x=>x.id===par)||{}).parent}
+ let media='';if(f.video)media+=`<video src="${base+f.video}" controls playsinline preload="metadata" ${f.poster?`poster="${base+f.poster}"`:''}></video>`;
+ for(const k of ['mix','preview','denoised','accompaniment','audio'])if(f[k])media+=`<div class="kv">${{mix:'成品混音',preview:'試聽混音',denoised:'降噪人聲',accompaniment:'上傳的伴奏',audio:'原始哼唱'}[k]}</div><audio src="${base+f[k]}" controls preload="none"></audio>`;
+ let lyr='';if(f.lyrics){try{lyr=`<pre>${esc(await (await fetch(base+f.lyrics)).text())}</pre>`}catch(e){}}
+ const links=Object.entries(f).flatMap(([k,v])=>Array.isArray(v)?v:[v]).map(v=>`<a href="${base+v}" download>⬇ ${esc(v)}</a>`).join('')+`<a href="${base}pod.json">pod.json</a>`;
+ d.innerHTML=`<button class="x" onclick="this.parentNode.style.display='none'">×</button><h2>${esc(p.id)}・豆${p.step} ${ST[p.step]}</h2>
+ <div class="kv">作者：<b>${esc(p.author)}</b>　｜　${tz(p.created)}<br>路徑：${path.map(esc).join(' → ')}<br>${esc(p.notes)}</div>${media}${lyr}
+ <div class="kv" style="margin-top:8px">致謝：${(p.credits||[]).map(esc).join('・')}</div><div class="files">${links}</div>
+ ${p.step<4?`<a class="btn" href="index.html#pod=${encodeURIComponent(p.id)}">✋ 從這裡接手（不用同意）</a>`:''}`;
+ d.scrollIntoView({behavior:'smooth',block:'nearest'})}
+</script></body></html>

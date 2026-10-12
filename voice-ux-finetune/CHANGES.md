@@ -93,3 +93,15 @@
 
 **其他**
 - 沒有動 5 個 JS；原有 element id 都在、沒有重複 id。新增 id：sunBadge、rmask、rplus、certShare、certDemo、recent、songStats、toast（tree.html）。
+
+## Bob（2026-10-12）
+新檔 `app/bob.js`（在 index.html 主程式後載入，覆寫 renderRoll/rowHtml/renderNotes/hl/renderAlign/stopAll；元素 id 全保留，SD 的樣式不動，只加新 class）。
+- 豆1 修正：「▶ 聽旋律」(#replayAll，全部重播) 改用新的播放器，從頭播並跟著亮行。新播放器不靠 Tone.Transport，改成邊播邊排程鋼琴音，所以暫停/跳轉都乾淨。
+- 豆1 播放列 #tp1：⏮（回到這個音開頭／上一個音）、▶/⏸、⏭（下一個音）、✱ 標記（標記目前播放或暫停中的音，再按一次取消）。表格 # 欄點 ✱ 也能切換；標記的列是橘色並有 ✱，旋律圖上是橘色條。「只看標記」(#onlyMk) 只顯示標記的音。
+- 表格捲動：只在播放中捲 .ntabw 內部（不捲整頁）讓目前的音置中；使用者碰觸/捲動表格後 3 秒內不搶捲動；暫停時停在目前的音。
+- 旋律圖 #roll（SVG）：＋/− 放大縮小（1–12×）、雙指縮放、拖曳左右平移、點音條跳到該音（自動打開「手動微調」並捲到那一列、試聽）；有播放位置線。只做直式。
+- 所有按鈕按下會亮一下（:active + .pressed）；復原→「已復原」、重設→「已重設…」、儲存→「草稿已儲存…」等提示。
+- 儲存草稿（#saveDraft1／#saveDraft2）：localStorage `doujia.draft.<pod>`，存音高、音標記、歌詞對齊、句標記；載入同一個 pod 時自動還原並顯示「已載入你 M/D HH:mm 存的草稿・捨棄草稿」。
+- 豆2：對齊後出現播放列 #tp2（以句為單位前後跳、播旋律、目前字幕高亮＋#lyrNow 顯示、✱ 標記句、只看標記）；每句 ◀ 0.1 / 0.1 ▶ 和下排 ±0.01（按住會連續）立即更新時間（顯示到 0.01 秒）；下載字幕 .srt（#dlSrt）、.lrc（#dlLrc2）。
+- 限制：本 app 沒有「字幕提前量」設定，所以沒有套用 0.7 秒 lead（bob.js 內 LEAD=0）；微調只改每句開始時間；草稿只在同一支手機/瀏覽器。
+- 測試：Playwright Chromium 390×844，無 console error；截圖 shots/bob-*.png。

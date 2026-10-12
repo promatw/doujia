@@ -755,5 +755,6 @@ async function loadPod(id){const chain=[];let cur=id;
 addEventListener('hashchange',()=>location.reload());
 if(HP.get('pod'))loadPod(HP.get('pod')).catch(e=>{toast(e.message);show('onboard')});else if(HP.has('share'))show('landing');else{show('onboard');syncTabs()}
 </script>
+<script src="bob.js"></script>
 </body>
 </html>

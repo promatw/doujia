@@ -713,7 +713,7 @@ async function makeVideo(){checkGate();if($('#makeVid').disabled)return;if(S.vox
  const imgs=await Promise.all(S.imgs.map(loadImg));const cv=$('#vcan'),ctx=cv.getContext('2d');$('#vout').classList.add('hidden');$('#vok').classList.add('hidden');$('#dlVid').classList.add('hidden');
  await Tone.start();await loadInst();const raw=Tone.getContext().rawContext,dest=raw.createMediaStreamDestination?raw.createMediaStreamDestination():new MediaStreamAudioDestinationNode(raw._nativeContext||raw);Tone.getDestination().connect(dest);
  const types=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm'];const mime=types.find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t))||'';S.videoExt=mime.startsWith('video/mp4')?'mp4':'webm';
- const stream=new MediaStream([...cv.captureStream(30).getVideoTracks(),...dest.stream.getAudioTracks()]);const rec=new MediaRecorder(stream,mime?{mimeType:mime,videoBitsPerSecond:4e6}:{});const parts=[];rec.ondataavailable=e=>e.data.size&&parts.push(e.data);
+ const stream=new MediaStream([...cv.captureStream(30).getVideoTracks(),...dest.stream.getAudioTracks()]);const rec=new MediaRecorder(stream,mime?{mimeType:mime,videoBitsPerSecond:(window.BOBV?BOBV().v:4e6),audioBitsPerSecond:(window.BOBV?BOBV().a:128000)}:{});const parts=[];rec.ondataavailable=e=>e.data.size&&parts.push(e.data);
  $('#render').classList.add('on');$('#makeVid').disabled=true;const pl=placement(),voice=S.raw||S.resing?vocalBuf():null;
  rec.start(500);
  await playScore({key:'video',mel:!voice,voice,vocAt:pl.vocAt,acc:S.acc,accAt:pl.accAt,vg:+$('#vocVol').value,ag:+$('#accVol').value,wet:!!voice,
@@ -755,6 +755,6 @@ async function loadPod(id){const chain=[];let cur=id;
 addEventListener('hashchange',()=>location.reload());
 if(HP.get('pod'))loadPod(HP.get('pod')).catch(e=>{toast(e.message);show('onboard')});else if(HP.has('share'))show('landing');else{show('onboard');syncTabs()}
 </script>
-<script src="bob.js"></script>
+<script src="accomp2.js"></script><script src="bob.js"></script><script src="bob2.js"></script>
 </body>
 </html>

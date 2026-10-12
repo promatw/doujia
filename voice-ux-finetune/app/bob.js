@@ -36,20 +36,22 @@ const now=()=>performance.now()/1000;
 function makeTP(o){const T={pos:0,on:false,t0:0,nx:0,raf:0,o};
  const units=()=>o.units();
  T.cur=()=>{const u=units();let k=-1;for(let i=0;i<u.length;i++)if(u[i].start<=T.pos+.02)k=i;return Math.max(0,k)};
- T.end=()=>{const N=notes();return N.length?Math.max(...N.map(n=>n.end)):0};
+ T.end=()=>{const N=notes();const e=N.length?Math.max(...N.map(n=>n.end)):0;const vb=o.voice&&o.voice();return vb?Math.max(e,vb.duration-.3):e};
  function loop(){if(!T.on)return;T.pos=now()-T.t0;const N=notes();
-  while(T.nx<N.length&&N[T.nx].start<T.pos+.15){const n=N[T.nx++];if(piano&&n.end>T.pos){try{piano.triggerAttackRelease(Tone.Frequency(n.pitch,'midi').toNote(),Math.max(.06,n.end-Math.max(n.start,T.pos)),Tone.now()+Math.max(0,n.start-T.pos),.75)}catch(e){}}}
+  while(T.nx<N.length&&N[T.nx].start<T.pos+.15){const n=N[T.nx++];if(piano&&!T.vp&&n.end>T.pos){try{piano.triggerAttackRelease(Tone.Frequency(n.pitch,'midi').toNote(),Math.max(.06,n.end-Math.max(n.start,T.pos)),Tone.now()+Math.max(0,n.start-T.pos),.75)}catch(e){}}}
   o.onPos(T.pos,T.cur(),true);
   if(T.pos>T.end()+.4){T.pause();T.pos=0;o.onPos(0,T.cur(),false);o.onEnd&&o.onEnd();return}
   T.raf=requestAnimationFrame(loop)}
  T.play=async()=>{if(!notes().length){toast('還沒有旋律');return}TPS.forEach(x=>x!==T&&x.pause());_stopAll();
   if(T.pos>=T.end())T.pos=0;T.on=true;setBtn();
   try{await Tone.start();await loadInst()}catch(e){console.warn(e)}
-  if(!T.on)return;const N=notes();T.nx=N.findIndex(n=>n.end>T.pos);if(T.nx<0)T.nx=N.length;
-  T.t0=now()-T.pos;loop()};
- T.pause=()=>{if(!T.on)return;T.on=false;cancelAnimationFrame(T.raf);try{piano&&piano.releaseAll()}catch(e){}setBtn();o.onPos(T.pos,T.cur(),false)};
+  if(!T.on)return;const vb=o.voice&&o.voice();if(vb){try{T.vp=new Tone.Player(new Tone.ToneAudioBuffer(vb)).connect(master||Tone.getDestination());T.vp.start(Tone.now()+.05,Math.min(T.pos,vb.duration-.01))}catch(e){console.warn(e);T.vp=null}}
+  const N=notes();T.nx=N.findIndex(n=>n.end>T.pos);if(T.nx<0)T.nx=N.length;
+  T.t0=now()-T.pos+(T.vp?.05:0);loop()};
+ T.killVP=()=>{if(T.vp){try{T.vp.stop();T.vp.dispose()}catch(e){}T.vp=null}};
+ T.pause=()=>{if(!T.on)return;T.on=false;T.killVP();cancelAnimationFrame(T.raf);try{piano&&piano.releaseAll()}catch(e){}setBtn();o.onPos(T.pos,T.cur(),false)};
  T.toggle=()=>T.on?T.pause():T.play();
- T.seek=t=>{const was=T.on;if(was){T.on=false;cancelAnimationFrame(T.raf);try{piano&&piano.releaseAll()}catch(e){}}T.pos=Math.max(0,t);o.onPos(T.pos,T.cur(),false);if(was)T.play();else setBtn()};
+ T.seek=t=>{const was=T.on;if(was){T.on=false;T.killVP();cancelAnimationFrame(T.raf);try{piano&&piano.releaseAll()}catch(e){}}T.pos=Math.max(0,t);o.onPos(T.pos,T.cur(),false);if(was)T.play();else setBtn()};
  T.prev=()=>{const u=units();if(!u.length){T.seek(T.pos-2);return}const i=T.cur();T.seek(T.pos-u[i].start>.6?u[i].start:u[Math.max(0,i-1)].start)};
  T.next=()=>{const u=units();if(!u.length){T.seek(T.pos+2);return}const i=T.cur();if(i+1<u.length)T.seek(u[i+1].start);else toast('已經是最後一個')};
  function setBtn(){const b=$(`#${o.id}Play`);if(b){b.textContent=T.on?'⏸ 暫停':'▶ 播放';b.setAttribute('aria-label',T.on?'暫停':'播放')}const tt=$(`#${o.id}Time`);if(tt)tt.textContent=ft(T.pos)}
@@ -122,7 +124,7 @@ function jumpTo(i){const d=$('#ntab').closest('details');if(d&&!d.open)d.open=tr
 /* ---------- 豆2: lyrics ---------- */
 const lunits=()=>S.align.filter(a=>a.start!=null);
 let curL=-1;
-var TP2=makeTP({id:'tp2',units:lunits,onPos:(t,i,on)=>{const u=lunits(),a=u[i];const k=a?S.align.indexOf(a):-1;
+var TP2=makeTP({id:'tp2',units:lunits,voice:()=>{const src=(document.querySelector('#melSeg button.on')||{}).dataset;return (src&&src.src==='piano')||!S.raw?null:vocalBuf()},onPos:(t,i,on)=>{const u=lunits(),a=u[i];const k=a?S.align.indexOf(a):-1;
   if(k!==curL){curL=k;$$('#alignOut .alr').forEach(r=>r.classList.toggle('cur',+r.dataset.li===k));const el=$(`#alignOut .alr[data-li="${k}"]`);if(on&&el&&now()-userPageT>3){const b=el.getBoundingClientRect();if(b.top<80||b.bottom>innerHeight-140)el.scrollIntoView({block:'center',behavior:'smooth'})}}
   $('#lyrNow').textContent=a&&(t>=a.start-.05||!on)?a.text:'';TP2.setBtn()},onEnd:()=>{$('#lyrNow').textContent=''}});TPS.push(TP2);
 let userPageT=0;['wheel','touchstart'].forEach(ev=>addEventListener(ev,()=>userPageT=now(),{passive:true}));

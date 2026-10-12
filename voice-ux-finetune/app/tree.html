@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>豆莢樹・哼哼</title><link rel="icon" href="img/logo-pod.png">
+<style>
+body{margin:0;background:radial-gradient(120% 50% at 50% 0%,#1a3326 0%,#0A1310 55%);color:#F1F1E6;font-family:"Noto Sans TC","PingFang TC",system-ui,sans-serif;font-size:16px;min-height:100vh}
+main{max-width:560px;margin:auto;padding:18px 14px 60px}
+h1{font-family:"Noto Serif TC",serif;font-size:26px;margin:4px 0 2px;display:flex;align-items:center;gap:8px;letter-spacing:2px}h1 img{width:36px}
+.sub{color:#A9B5AD;font-size:14.5px;margin-bottom:10px;line-height:1.6}a{color:#B9E59A}
+.nav{display:flex;gap:14px;font-size:14px;margin-bottom:14px}
+h2.song{font-family:"Noto Serif TC",serif;font-size:21px;margin:22px 0 6px}
+.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:14px;margin:10px 0}
+.card.fin{border-color:rgba(242,163,179,.35);background:linear-gradient(160deg,rgba(242,163,179,.08),rgba(255,255,255,.03))}
+.top{display:flex;gap:12px;align-items:center}
+.poster{width:64px;height:64px;border-radius:14px;background:#1d2a22 center/cover;flex:none}
+.tt{font-weight:800;font-size:17px}.tag{font-size:12px;border-radius:8px;padding:1px 8px;margin-left:6px;vertical-align:2px}
+.t-fin{background:#f2a3b3;color:#3a1520}.t-wip{background:rgba(185,229,154,.18);color:#D4F0C0}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;font-size:13px;color:#C9D0CB}
+.who{display:inline-flex;align-items:center;gap:4px}.av{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;color:#13261B}
+.s1{background:#B9E59A}.s2{background:#9fd6f0}.s3{background:#f3cf7a}.s4{background:#f2a3b3}.skip{background:#3c4a42;color:#9AA8A1}
+.arr{color:#66746E}
+.acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn{flex:1;min-width:120px;text-align:center;padding:11px 14px;border-radius:24px;font-weight:700;text-decoration:none;font-size:15px;border:0;cursor:pointer;font-family:inherit}
+.b-main{background:#B9E59A;color:#13261B}.b-sec{background:rgba(255,255,255,.07);color:#F1F1E6;border:1px solid rgba(255,255,255,.18)}
+.media{margin-top:10px}.media audio,.media video{width:100%;border-radius:12px}.media video{max-height:420px;background:#000}
+details.more{margin-top:6px}details.more summary{cursor:pointer;color:#B9E59A;font-size:14.5px;padding:6px 0}
+.code{font-size:11.5px;color:#66746E;margin-top:6px;font-family:ui-monospace,monospace}
+</style></head><body><main>
+<h1><img src="img/logo-pod.png" alt="">豆莢樹</h1>
+<div class="sub">一首歌由好幾個人接力完成：有人唱、有人寫詞、有人配伴奏、有人做成影片。按 ▶ 就能聽，還沒完成的也可以接著做。</div>
+<div class="nav"><a href="../index.html">← 首頁</a><a href="index.html">🎤 我也要哼一段</a></div>
+<div id="tree">載入中…</div>
+<div id="det" hidden></div>
+</main>
+<script>
+const $=s=>document.querySelector(s);const ST=['','唱','詞','伴奏','影片'];
+const PODS=location.pathname.includes('voice-ux-finetune')?'../../pods/':'../pods/';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let IDX=[];const by=id=>IDX.find(x=>x.id===id);
+function chainOf(p){const c=[];while(p){c.unshift(p);p=p.parent?by(p.parent):null}return c}
+function chainHtml(c){const out=[];for(let s=1;s<=4;s++){const p=c.find(x=>x.step===s);if(!p&&s>c[c.length-1].step)break;
+ out.push(p?`<span class="who"><span class="av s${s}">${esc((p.authorName||'?').slice(0,1))}</span>${ST[s]}・${esc(p.authorName||'匿名')}</span>`:`<span class="who"><span class="av skip">–</span>${ST[s]}・略過</span>`)}
+ return out.join('<span class="arr">→</span>')}
+function card(p,fin){const c=chainOf(p),t=c.map(x=>x.title).filter(Boolean).pop()||'未命名';
+ return `<div class="card ${fin?'fin':''}" data-id="${p.id}"><div class="top"><div class="poster" ${fin?`style="background-image:url(${PODS+p.id}/poster.jpg)"`:''}></div><div style="flex:1;min-width:0">
+ <div class="tt">${esc(t)}<span class="tag ${fin?'t-fin':'t-wip'}">${fin?'完成作品':'接力中・下一步：'+ST[p.step+1]}</span></div>
+ <div class="chain">${chainHtml(c)}</div></div></div>
+ <div class="acts"><button class="btn b-main" data-play="${p.id}">▶ ${fin?'看影片':'聽聽看'}</button>${fin?'':`<a class="btn b-sec" href="index.html#pod=${encodeURIComponent(p.id)}">✋ 接著做${ST[p.step+1]}</a>`}</div>
+ <div class="media"></div><div class="code">歌曲編號 ${esc(p.song)}</div></div>`}
+fetch(PODS+'index.json',{cache:'no-store'}).then(r=>r.json()).then(j=>{IDX=j.pods;
+ const songs=[...new Set(IDX.map(p=>p.song))].sort().reverse();
+ $('#tree').innerHTML=songs.map(s=>{const ps=IDX.filter(p=>p.song===s),leaves=ps.filter(p=>!ps.some(q=>q.parent===p.id));
+  const fin=leaves.filter(p=>p.step===4),wip=leaves.filter(p=>p.step<4);const title=ps.map(p=>p.title).find(Boolean)||'未命名';
+  const first=fin[0]||wip[0];const rest=[...fin.slice(1),...wip.filter(p=>p!==first)];
+  return `<h2 class="song">〈${esc(title)}〉</h2>${card(first,first.step===4)}${rest.length?`<details class="more"><summary>其他 ${rest.length} 個版本（${fin.length>1?fin.length-1+' 個完成、':''}${wip.filter(p=>p!==first).length} 個等人接手）</summary>${rest.map(p=>card(p,p.step===4)).join('')}</details>`:''}`}).join('');
+ document.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>play(b.dataset.play,b));
+ const h=location.hash.slice(1);if(h&&by(h)){const e=document.querySelector(`[data-id="${h}"]`);if(e){e.closest('details')?.setAttribute('open','');e.scrollIntoView()}}
+}).catch(e=>$('#tree').textContent='暫時載入不了作品，請稍後再試。');
+async function play(id,btn){const box=btn.closest('.card').querySelector('.media');if(box.innerHTML){box.innerHTML='';return}
+ try{let p=await (await fetch(PODS+id+'/pod.json')).json(),f=p.files||{};
+  // 沒有自己的聲音檔就往前找（例如詞、伴奏那一步）
+  let cur=p;while(!(f.video||f.mix||f.preview||f.denoised||f.audio)&&cur.parent){cur=await (await fetch(PODS+cur.parent+'/pod.json')).json();f=cur.files||{}}
+  const base=PODS+cur.id+'/';
+  box.innerHTML=f.video?`<video src="${base+f.video}" controls autoplay playsinline ${f.poster?`poster="${base+f.poster}"`:''}></video>`:`<audio src="${base+(f.mix||f.preview||f.denoised||f.audio)}" controls autoplay></audio>`;
+ }catch(e){box.textContent='這首暫時播不了'}}
+</script></body></html>

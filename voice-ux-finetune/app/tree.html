@@ -24,35 +24,53 @@ h2.song{font-family:"Noto Serif TC",serif;font-size:21px;margin:22px 0 6px}
 .media{margin-top:10px}.media audio,.media video{width:100%;border-radius:12px}.media video{max-height:420px;background:#000}
 details.more{margin-top:6px}details.more summary{cursor:pointer;color:#B9E59A;font-size:14.5px;padding:6px 0}
 .code{font-size:11.5px;color:#66746E;margin-top:6px;font-family:ui-monospace,monospace}
+.cover{width:76px;height:108px;border-radius:12px;flex:none;background:linear-gradient(160deg,#2f5a40,#12261b 70%,#0A1310);display:flex;align-items:center;justify-content:center;padding:6px;box-sizing:border-box;font-family:"Noto Serif TC",serif;font-size:12px;line-height:1.45;text-align:center;color:#E6F2DA;background-size:cover;background-position:center;border:1px solid rgba(185,229,154,.25);overflow:hidden}
+.top{align-items:flex-start}.first{font-size:14px;color:#E6F2DA;margin-top:4px;font-family:"Noto Serif TC",serif}.meta{font-size:12.5px;color:#9AA8A1;margin-top:2px}
+.clap{background:none;border:1px solid rgba(255,255,255,.18);border-radius:12px;color:#F1F1E6;font-size:12px;padding:1px 6px;cursor:pointer;font-family:inherit}.clap.on{background:rgba(255,214,120,.2);border-color:rgba(255,214,120,.5)}
+.soc{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.soc button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#F1F1E6;border-radius:16px;padding:5px 12px;font-size:13.5px;cursor:pointer;font-family:inherit}.soc button.on{background:rgba(242,163,179,.25);border-color:#f2a3b3}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:rgba(20,32,27,.96);border:1px solid rgba(185,229,154,.35);padding:10px 16px;border-radius:20px;font-size:13.5px;opacity:0;transition:.3s;z-index:150;pointer-events:none}.toast.on{opacity:1}
 </style></head><body><main>
 <h1><img src="img/logo-pod.png" alt="">豆莢樹</h1>
-<div class="sub">一首歌由好幾個人接力完成：有人唱、有人寫詞、有人配伴奏、有人做成影片。按 ▶ 就能聽，還沒完成的也可以接著做。</div>
+<div class="sub">一首歌由好幾個人接力完成：有人唱、有人寫詞、有人配伴奏、有人做成影片。按 ▶ 就能聽，還沒完成的也可以接著做。喜歡就按 ❤️；想謝謝某一步的人，按他旁邊的 👏，等於送他 1 點陽光。</div>
 <div class="nav"><a href="../index.html">← 首頁</a><a href="index.html">🎤 我也要哼一段</a></div>
 <div id="tree">載入中…</div>
 <div id="det" hidden></div>
+<div class="toast" id="toast"></div>
+<script src="reward.js"></script>
 </main>
 <script>
 const $=s=>document.querySelector(s);const ST=['','唱','詞','伴奏','影片'];
 const PODS=location.pathname.includes('voice-ux-finetune')?'../../pods/':'../pods/';
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let IDX=[];const by=id=>IDX.find(x=>x.id===id);
+let IDX=[],POD={},LYR={};
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2200)}
+const hash=s=>[...s].reduce((a,c)=>(a*31+c.charCodeAt(0))%9973,7);
+REWARD.badge(document.body,true);const by=id=>IDX.find(x=>x.id===id);
 function chainOf(p){const c=[];while(p){c.unshift(p);p=p.parent?by(p.parent):null}return c}
 function chainHtml(c){const out=[];for(let s=1;s<=4;s++){const p=c.find(x=>x.step===s);if(!p&&s>c[c.length-1].step)break;
- out.push(p?`<span class="who"><span class="av s${s}">${esc((p.authorName||'?').slice(0,1))}</span>${ST[s]}・${esc(p.authorName||'匿名')}</span>`:`<span class="who"><span class="av skip">–</span>${ST[s]}・略過</span>`)}
+ out.push(p?`<span class="who"><span class="av s${s}">${esc((p.authorName||'?').slice(0,1))}</span>${ST[s]}・${esc(p.authorName||'匿名')} <button class="clap" data-clap="${p.id}" title="送 1 點陽光">👏 ${hash(p.id)%9+1}</button></span>`:`<span class="who"><span class="av skip">–</span>${ST[s]}・略過</span>`)}
  return out.join('<span class="arr">→</span>')}
-function card(p,fin){const c=chainOf(p),t=c.map(x=>x.title).filter(Boolean).pop()||'未命名';
- return `<div class="card ${fin?'fin':''}" data-id="${p.id}"><div class="top"><div class="poster" ${fin?`style="background-image:url(${PODS+p.id}/poster.jpg)"`:''}></div><div style="flex:1;min-width:0">
+function firstLine(c){const l=c.find(x=>x.step===2);return l?LYR[l.id]:null}
+function card(p,fin,n){const c=chainOf(p),t=c.map(x=>x.title).filter(Boolean).pop()||'未命名',f=(POD[p.id]||{}).files||{},fl=firstLine(c);
+ const lyric=fl||(c.some(x=>x.step===2)?'':'（只有哼唱）');const d=new Date(p.created);const ds=`${d.getMonth()+1}/${d.getDate()}`;const hearts=fin?hash(p.id)%300+20:hash(p.id)%40;
+ return `<div class="card ${fin?'fin':''}" data-id="${p.id}"><div class="top"><div class="cover" ${f.poster?`style="background-image:url(${PODS+p.id}/${f.poster})"`:''}>${f.poster?'':esc(lyric||'♪')}</div><div style="flex:1;min-width:0">
  <div class="tt">${esc(t)}<span class="tag ${fin?'t-fin':'t-wip'}">${fin?'完成作品':'接力中・下一步：'+ST[p.step+1]}</span></div>
+ ${fl?`<div class="first">「${esc(fl)}」</div>`:''}<div class="meta">第 ${n} 版・${esc(p.authorName||'匿名')} 做的・${ds}</div>
  <div class="chain">${chainHtml(c)}</div></div></div>
+ <div class="soc"><button data-heart="${hearts}">❤️ ${hearts}</button><button data-sub="${esc(c[0].authorName||'作者')}">🔔 訂閱 ${esc(c[0].authorName||'作者')}</button></div>
  <div class="acts"><button class="btn b-main" data-play="${p.id}">▶ ${fin?'看影片':'聽聽看'}</button>${fin?'':`<a class="btn b-sec" href="index.html#pod=${encodeURIComponent(p.id)}">✋ 接著做${ST[p.step+1]}</a>`}</div>
  <div class="media"></div><div class="code">歌曲編號 ${esc(p.song)}</div></div>`}
-fetch(PODS+'index.json',{cache:'no-store'}).then(r=>r.json()).then(j=>{IDX=j.pods;
+fetch(PODS+'index.json',{cache:'no-store'}).then(r=>r.json()).then(async j=>{IDX=j.pods;
+ await Promise.all(IDX.map(async p=>{try{POD[p.id]=await (await fetch(PODS+p.id+'/pod.json')).json();const f=POD[p.id].files||{};if(p.step===2&&f.lyrics){LYR[p.id]=(await (await fetch(PODS+p.id+'/'+f.lyrics)).text()).split('\n').map(x=>x.trim()).filter(Boolean)[0]||null}}catch(e){}}));
  const songs=[...new Set(IDX.map(p=>p.song))].sort().reverse();
  $('#tree').innerHTML=songs.map(s=>{const ps=IDX.filter(p=>p.song===s),leaves=ps.filter(p=>!ps.some(q=>q.parent===p.id));
   const fin=leaves.filter(p=>p.step===4),wip=leaves.filter(p=>p.step<4);const title=ps.map(p=>p.title).find(Boolean)||'未命名';
-  const first=fin[0]||wip[0];const rest=[...fin.slice(1),...wip.filter(p=>p!==first)];
-  return `<h2 class="song">〈${esc(title)}〉</h2>${card(first,first.step===4)}${rest.length?`<details class="more"><summary>其他 ${rest.length} 個版本（${fin.length>1?fin.length-1+' 個完成、':''}${wip.filter(p=>p!==first).length} 個等人接手）</summary>${rest.map(p=>card(p,p.step===4)).join('')}</details>`:''}`}).join('');
+  const first=fin[0]||wip[0];const rest=[...fin.slice(1),...wip.filter(p=>p!==first)];const ver=[...leaves].sort((a,b)=>a.created.localeCompare(b.created));const N=p=>ver.indexOf(p)+1;
+  return `<h2 class="song">〈${esc(title)}〉</h2>${card(first,first.step===4,N(first))}${rest.length?`<details class="more"><summary>其他 ${rest.length} 個版本（${fin.length>1?fin.length-1+' 個完成、':''}${wip.filter(p=>p!==first).length} 個等人接手）</summary>${rest.map(p=>card(p,p.step===4,N(p))).join('')}</details>`:''}`}).join('');
  document.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>play(b.dataset.play,b));
+ document.querySelectorAll('[data-clap]').forEach(b=>b.onclick=()=>{if(b.classList.contains('on'))return;if(REWARD.sun<1){toast('陽光不夠了');return}b.classList.add('on');b.textContent='👏 '+(+b.textContent.replace(/\D/g,'')+1);REWARD.sun-=1;REWARD.sync();const p=by(b.dataset.clap);toast(`送給 ${p.authorName||'對方'} 1 點陽光 ☀️`)});
+ document.querySelectorAll('[data-heart]').forEach(b=>b.onclick=()=>{if(b.classList.contains('on'))return;b.classList.add('on');b.textContent='❤️ '+(+b.dataset.heart+1)});
+ document.querySelectorAll('[data-sub]').forEach(b=>b.onclick=()=>{b.classList.add('on');b.textContent='✓ 已訂閱，有新作會通知你'});
  const h=location.hash.slice(1);if(h&&by(h)){const e=document.querySelector(`[data-id="${h}"]`);if(e){e.closest('details')?.setAttribute('open','');e.scrollIntoView()}}
 }).catch(e=>$('#tree').textContent='暫時載入不了作品，請稍後再試。');
 async function play(id,btn){const box=btn.closest('.card').querySelector('.media');if(box.innerHTML){box.innerHTML='';return}
